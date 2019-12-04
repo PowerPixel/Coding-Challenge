@@ -8,6 +8,8 @@ body {
     width: 1200px;
 }
 
+#bandeau > img { width: 100%; }
+
 fieldset {
     float: left;
     margin: 10px 10px;
@@ -22,6 +24,7 @@ legend {
 }
 
 h1 {
+    margin: 18px 0px;
     padding: 10px 5px;
 	font-size: 1.2em;
 	color: white;

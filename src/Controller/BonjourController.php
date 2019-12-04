@@ -16,4 +16,12 @@ class BonjourController extends AbstractController
             'aQui' => "joyeux contribuable",
         ]);
     }
+
+    /**
+     * @Route("/icons", name="icones")
+     */
+    public function icons()
+    {
+        return $this->render('bonjour/icons.html.twig');
+    }
 }

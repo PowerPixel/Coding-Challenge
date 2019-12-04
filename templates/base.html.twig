@@ -6,7 +6,6 @@
     <title>{% block title %}Bienvenue !{% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('img/uga.ico') }}" />
     <link rel="stylesheet" type="text/css" href="{{asset('css/bootstrap.min.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{asset('css/bootstrap-theme.min.css')}}" />
     {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{asset('css/main.css')}}" />
     {% endblock %}
@@ -21,8 +20,8 @@
     {% endblock %}
     {% block menu %}{% endblock %}
     {% block body %}{% endblock %}
-    <script type="text/javascript" src="{{asset('js/jquery-3.2.1.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
     {% block javascripts %}
     {% endblock %}
 </body>

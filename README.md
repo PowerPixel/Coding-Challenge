@@ -20,12 +20,13 @@ On préférera donc en général utiliser l'application `symfony` pour créer de
 
 La configuration de cette application Web classique contient :
 
-- **Vues :** `twig` (gestionnaire de templates), `asset` (fichiers css, js, img), `form` (formulaires) ;
-- **Contrôleurs :** `annotations` (pour les routes), `security` (pour les utilisateurs et les droits d'accès), `form` ;
-- **Modèles :** `doctrine` (ORM : *Object Repository Manager*, pour l'accès à la base de données), `form`, `maker`
+- **Vues :** `twig-pack` (gestionnaire de templates), `asset` (fichiers css, js, img), `form` (formulaires) ;
+- **Contrôleurs :** les annotations (notamment pour les routes), `security-bundle` (pour les utilisateurs et les
+  droits d'accès), `form` ;
+- **Modèles :** `orm-pack` (ORM : *Object Repository Manager*, pour l'accès à la base de données), `form`, `maker-bundle`
   (outils d'aide à la création de code) ;
-- **Outils bien pratiques :** `server` (pour développer sans installer de serveur Web type Apache ou Nginx), `profiler`
-  (outils de débogage), `maker`.
+- **Outils bien pratiques :** `profiler-pack` (outils de débogage), un serveur web intégré, pour le
+  développement), `flex` (gestion simplifiée des paquets composer).
 
 # Quelques ressources pour les vues #
 

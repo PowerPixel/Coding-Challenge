@@ -32,7 +32,7 @@ La configuration de cette application Web classique contient :
 
 Pour démarrer la création du design de votre application, vous trouverez dans `public` :
 
-- `js` : répertoire contenant le code JavaScript pour jQuery-3.4.1 et Bootstrap-4.4.1 (la version `bundle` contient
+- `js` : répertoire contenant le code JavaScript pour jQuery-3.5.1 et Bootstrap-4.5.2 (la version `bundle` contient
   `popper`) ;
 - `fonts` : les fontes Font Awesome ;
 - `css` : feuilles de style de Bootstrap, Font Awesome ainsi que `main.css` copié de `gigondas` ;

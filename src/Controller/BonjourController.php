@@ -14,6 +14,7 @@ class BonjourController extends AbstractController
     {
         return $this->render('bonjour/index.html.twig', [
             'aQui' => "joyeux contribuable",
+            'laDate' => (new \DateTime())->format("Y-m-d"),
         ]);
     }
 

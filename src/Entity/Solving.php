@@ -34,6 +34,11 @@ class Solving
      */
     private $exercise_id;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $last_submitted_code;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +76,18 @@ class Solving
     public function setExerciseId(Exercise $exercise_id): self
     {
         $this->exercise_id = $exercise_id;
+
+        return $this;
+    }
+
+    public function getLastSubmittedCode(): ?string
+    {
+        return $this->last_submitted_code;
+    }
+
+    public function setLastSubmittedCode(?string $last_submitted_code): self
+    {
+        $this->last_submitted_code = $last_submitted_code;
 
         return $this;
     }

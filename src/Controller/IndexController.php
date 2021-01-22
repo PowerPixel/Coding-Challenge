@@ -5,10 +5,10 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BonjourController extends AbstractController
+class IndexController extends AbstractController
 {
     /**
-     * @Route("/", name="bonjour")
+     * @Route("/", name="index")
      */
     public function index()
     {

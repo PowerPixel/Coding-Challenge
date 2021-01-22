@@ -43,6 +43,11 @@ class User
      */
     private $user_type;
 
+    /**
+     * @ORM\Column(type="string", length=60)
+     */
+    private $username;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +109,18 @@ class User
     public function setUserType(?UserType $user_type): self
     {
         $this->user_type = $user_type;
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }

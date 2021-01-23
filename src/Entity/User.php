@@ -48,6 +48,11 @@ class User
      */
     private $username;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $join_date;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +126,18 @@ class User
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getJoinDate(): ?\DateTimeInterface
+    {
+        return $this->join_date;
+    }
+
+    public function setJoinDate(\DateTimeInterface $join_date): self
+    {
+        $this->join_date = $join_date;
 
         return $this;
     }

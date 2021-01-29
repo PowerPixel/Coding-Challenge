@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Coding Challenge
+{% endblock %}
+{% block titre_page %}Accueil{% endblock %}
+{% block body %}
+	<div class="alert">
+		{% if is_granted("ROLE_ADMIN") %}
+			Vous êtes un administrateur
+		{% endif %}
+		{% if is_granted("ROLE_NEW_USER") %}
+			Vous êtes un utilisateur en attente de validation par un administrateur.
+		{% endif %}
+	</div>
+{% endblock %}

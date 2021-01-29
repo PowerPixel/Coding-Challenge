@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg navbar-light">
+	<div class="navbar-brand">Coding Challenge</div>
+	{% if app.user %}
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="#">Accueil
+				</a>
+				<a class="nav-item nav-link" href="#">Exercices</a>
+				<a class="nav-item nav-link" href="#">Challenge</a>
+        {% if is_granted('ROLE_ADMIN') %}
+          <a class="nav-item nav-link" href="#">Panneau d'administration</a>
+        {% endif %}
+			</div>
+		</div>
+    <div class ="align-right">{{ app.user.username }}</div>
+    <a href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt align-right"></i></a>
+		{% else %}
+    <a class="nav-item nav-link" href="{{ path('app_login') }}">Connexion</a>
+		<a class="nav-item nav-link" href="{{ path('app_register') }}">Inscription</a>
+	{% endif %}
+</nav>

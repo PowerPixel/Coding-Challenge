@@ -29,7 +29,7 @@ class Participate
     private $user_id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Challenge::class, cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity=Challenge::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="challenge", referencedColumnName="id", nullable=false)
      */
     private $challenge_id;

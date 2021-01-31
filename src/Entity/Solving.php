@@ -29,7 +29,7 @@ class Solving
     private $user_id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Exercise::class, cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity=Exercise::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false)
      */
     private $exercise_id;

@@ -23,7 +23,7 @@ class Participate
     private $user_points;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity=User::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
      */
     private $user_id;

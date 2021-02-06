@@ -5,17 +5,14 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BonjourController extends AbstractController
+class IndexController extends AbstractController
 {
     /**
-     * @Route("/bonjour", name="bonjour")
+     * @Route("/", name="index")
      */
     public function index()
     {
-        return $this->render('bonjour/index.html.twig', [
-            'aQui' => "joyeux contribuable",
-            'laDate' => (new \DateTime())->format("Y-m-d"),
-        ]);
+        return $this->render('index/index.html.twig', []);
     }
 
     /**

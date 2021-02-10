@@ -5,12 +5,19 @@
 {% endblock %}
 {% block titre_page %}Accueil{% endblock %}
 {% block body %}
-	<div class="alert">
-		{% if is_granted("ROLE_ADMIN") %}
-			Vous êtes un administrateur
+	<div class="container challenge-container">
+	{% for challenge in challenges %}
+		{% if loop.index0 % 3 == 0 %}
+			<div class="row challenge-row">
 		{% endif %}
-		{% if is_granted("ROLE_NEW_USER") %}
-			Vous êtes un utilisateur en attente de validation par un administrateur.
+				<div class="col-sm">
+					<p>{{ challenge.id }}</p>
+					<p>{{ challenge.StartDate|date("d/m/Y") }} - {{ challenge.EndDate|date("d/m/Y")  }}</p>
+					<a href="{{ path("challenge",{ id: challenge.id}) }}"><div class="btn btn-primary">Accéder au challenge</div></a>
+				</div>
+		{% if loop.index0 % 6 == 3 %}
+			</div>
 		{% endif %}
+	{% endfor %}
 	</div>
 {% endblock %}

@@ -3,10 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\ParticipateRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipateRepository::class)
+ * @ApiResource(collectionOperations={},
+ *              itemOperations={"get","patch"})
  */
 class Participate
 {
@@ -25,6 +29,7 @@ class Participate
     /**
      * @ORM\ManyToMany(targetEntity=User::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @ApiProperty(identifier=true)
      */
     private $user_id;
 

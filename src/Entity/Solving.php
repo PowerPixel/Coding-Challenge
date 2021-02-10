@@ -5,8 +5,12 @@ namespace App\Entity;
 use App\Repository\SolvingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
  * @ORM\Entity(repositoryClass=SolvingRepository::class)
+ * @ApiResource(collectionOperations={"get"},
+ *              itemOperations={"put","get"})
  */
 class Solving
 {

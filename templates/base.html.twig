@@ -18,11 +18,12 @@
 		{% include('navbar.html.twig') %}
 	</header>
 	<body class="container">
+	
 		<h2>
 			{% block titre_page %}
 			{% endblock %}
 		</h2>
-		{% block menu %}
+		{% block admin_sidebar %}
 		{% endblock %}
 		{% block body %}{% endblock %}
 		<script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>

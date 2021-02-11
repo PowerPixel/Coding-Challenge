@@ -3,16 +3,16 @@
 {% block titre_page %}Panneau d'administration
 {% endblock %}
 {% block admin_sidebar %}
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-3">
-				<nav class="nav flex-column">
-					<a class="p-1 nav-link" href="#">Utilisateurs en attente</a>
-					<a class="p-1 nav-link" href="#">Inscrire des utilisateurs</a>
-					<a class="p-1 nav-link" href="#">Exercices en attente d'approbation</a>
-				</nav>
-			</div>
-		</div>
-	</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <nav class="nav flex-column">
+                <a class="p-1 nav-link" href="{{ path('users_approval') }}">Utilisateurs en attente</a>
+                <a class="p-1 nav-link" href="#">Inscrire des utilisateurs</a>
+                <a class="p-1 nav-link" href="#">Exercices en attente d'approbation</a>
+            </nav>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block body %}{% endblock %}

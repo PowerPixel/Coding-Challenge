@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Challenge;
+use App\Repository\ChallengeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,7 +14,9 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        return $this->render('index/index.html.twig', []);
+        $repoChall = $this->getDoctrine()->getRepository(Challenge::class);
+        $challenges = $repoChall->findAll();
+        return $this->render('index/index.html.twig', ['challenges' => $challenges]);
     }
 
     /**

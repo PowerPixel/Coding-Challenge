@@ -23,6 +23,11 @@
 			{% block titre_page %}
 			{% endblock %}
 		</h2>
+		{% if  is_granted('ROLE_NEW_USER')%}
+			<div class="alert alert-danger">
+				Votre inscription n'a pas encore été approuvée par un administrateur. Le site n'est disponible qu'en lecture seule.
+			</div>
+		{% endif %}
 		{% block admin_sidebar %}
 		{% endblock %}
 		{% block body %}{% endblock %}

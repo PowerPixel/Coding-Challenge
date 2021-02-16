@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %}Panneau d'administration{% endblock %}
+{% block titre_page %}Panneau d'administration
+{% endblock %}
+{% block body %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-3 w-25">
+				<nav class="nav flex-column">
+					<a class="p-1 nav-link" href="{{ path('users_approval') }}">Utilisateurs en attente</a>
+					<a class="p-1 nav-link" href="{{ path('admin_user_registration') }}">Inscrire des utilisateurs</a>
+					<a class="p-1 nav-link" href="#">Exercices en attente d'approbation</a>
+				</nav>
+			</div>
+			<div class="justify-content-md-center w-75">
+				 {% block content %}{% endblock %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

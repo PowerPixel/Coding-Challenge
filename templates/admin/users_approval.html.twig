@@ -1,44 +1,31 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin_base.html.twig' %}
 
-{% block titre_page %}Panneau d'administration
-{% endblock %}
-{% block body %}
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-3 w-25">
-				<nav class="nav flex-column">
-					<a class="p-1 nav-link" href="{{ path('users_approval') }}">Utilisateurs en attente</a>
-					<a class="p-1 nav-link" href="#">Inscrire des utilisateurs</a>
-					<a class="p-1 nav-link" href="#">Exercices en attente d'approbation</a>
-				</nav>
-			</div>
-			<div class="justify-content-md-center w-75">
-				<table class="table">
-					<thead>
-						<th>Nom</th>
-						<th>Prénom</th>
-						<th>Pseudonyme</th>
-						<th></th>
-					</thead>
-				</tr>
+{% block content %}
+	<div class="justify-content-md-center w-75">
+		<table class="table">
+			<thead>
+				<th>Nom</th>
+				<th>Prénom</th>
+				<th>Pseudonyme</th>
+				<th></th>
 			</thead>
-			<tbody>
-				{% for user in users %}
-					<tr>
-						<td>{{ user.FirstName }}</td>
-						<td>{{ user.LastName}}</td>
-						<td>{{ user.username }}</td>
-						<td>
-							<a href="{{ path("user_approved", {id:user.id}) }}">
-								<i class="fas fa-check"></i>
-							</a>
-							<a href="{{ path("user_refused", {id:user.id}) }}">
-								<i class="fas fa-times"></i>
-							</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	</div>
-</div></div>{% endblock %}
+		</tr>
+	</thead>
+	<tbody>
+		{% for user in users %}
+			<tr>
+				<td>{{ user.FirstName }}</td>
+				<td>{{ user.LastName}}</td>
+				<td>{{ user.username }}</td>
+				<td>
+					<a href="{{ path("user_approved", {id:user.id}) }}">
+						<i class="fas fa-check"></i>
+					</a>
+					<a href="{{ path("user_refused", {id:user.id}) }}">
+						<i class="fas fa-times"></i>
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>{% endblock %}

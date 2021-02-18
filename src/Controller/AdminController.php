@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Exercise;
+use App\Form\AdminRegistrationFormType;
+use App\Repository\ExerciseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Form\AdminRegistrationFormType;
 
 /**
  * @Route("/admin")
@@ -19,7 +23,6 @@ class AdminController extends AbstractController
 {
     /**
      * @Route("/", name="admin")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function index(): Response
     {
@@ -28,7 +31,6 @@ class AdminController extends AbstractController
     /**
      *  Controls the route to see users waiting for approval user in the admin panel.
      * @Route("/users_approval",name="users_approval")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function usersApproval(): Response
     {
@@ -55,7 +57,6 @@ class AdminController extends AbstractController
     /**
      * Controls the route to refuse a certain user in the admin panel.
      * @Route("/user_refused/{id}",name="user_refused")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function userRefused(int $id): Response
     {
@@ -69,17 +70,14 @@ class AdminController extends AbstractController
     /**
      * Controls the route to the bulk registration panel.
      * @Route("/user_registration",name="admin_user_registration")
-     * @IsGranted("ROLE_ADMIN")
      */
-    public function userRegistration(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function userRegistrationPanel(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = new User();
         $user->setRoles(array("ROLE_USER"));
         $form = $this->createForm(AdminRegistrationFormType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
@@ -90,11 +88,72 @@ class AdminController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+            unset($form);
+            $user = new User();
+            $user->setRoles(array("ROLE_USER"));
+            $form = $this->createForm(AdminRegistrationFormType::class, $user);
+            $this->addFlash('success', "L'utilisateur à été crée avec succés !");
         }
+
         return $this->render('admin/admin_user_registration.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
+    /**
+     * Controls the route to the exercise approval panel.
+     * @Route("/exercises/{page?1}",name="exercises")
+     */
+    public function exercisesViewPanel(int $page): Response
+    {
+        $searchTerm = ['searchTerm' => "",];
+        $searchFormBuilder = $this->createFormBuilder($searchTerm);
+        $searchFormBuilder->add('searchTerm', SearchType::class, [
+            'required' => false,
+            'label' => "Recherche",
+        ])
+            ->add('search', SubmitType::class, [
+                'label' => "Rechercher"
+            ]);
+        $form = $searchFormBuilder->getForm();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $searchTerm = $form->getData();
+        }
+        $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercises = $exercisesRepo->findExercisesByPageWithSearchCriteria($page, 10, $searchTerm['searchTerm']);
+        $isLastPage = ($page === intval($exercises['numberOfPages']));
+        return $this->render('admin/exercises_manager_panel.html.twig', [
+            'exercises' => $exercises['results'],
+            'isLastPage' => $isLastPage,
+            'form' => $form->createView()
+        ]);
+    }
+    /**
+     * Controls the view of an exercise.
+     * @param integer $id The id of the exercise to view.
+     * @Route("/exercises/view/{id}",name="exercise_view")
+     */
+    public function exerciseView(int $id): Response
+    {
+        $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercise = $exercisesRepo->find($id);
+        $pathToExercise = ExerciseRepository::$PATH_TO_EXERCISES_FOLDER . $exercise->getFolderPath();
+        $inputFiles = glob($pathToExercise . '/input*');
+        $outputFiles = glob($pathToExercise . '/output*');
+        $inputContents = array();
+        $outputContents = array();
+        foreach ($inputFiles as $file) {
+            $content = file_get_contents($file);
+            $inputContents[] = $content;
+        }
+        foreach ($outputFiles as $file) {
+            $content = file_get_contents($file);
+            $outputContents[] = $content;
+        }
 
-   
+        return $this->render('admin/exercise_view.html.twig', [
+            'outputs' => $outputContents,
+            'inputs' => $inputContents,
+            'name' => $exercise->getName()
+        ]);
+    }
 }

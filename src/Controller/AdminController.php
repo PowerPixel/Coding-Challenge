@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+
 use App\Entity\Exercise;
 use App\Form\AdminRegistrationFormType;
 use App\Repository\ExerciseRepository;
@@ -67,6 +68,7 @@ class AdminController extends AbstractController
         $em->flush();
         return $this->redirectToRoute("users_approval");
     }
+
     /**
      * Controls the route to the bulk registration panel.
      * @Route("/user_registration",name="admin_user_registration")

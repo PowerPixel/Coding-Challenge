@@ -156,4 +156,22 @@ class AdminController extends AbstractController
             'name' => $exercise->getName()
         ]);
     }
+
+    /**
+     * The controller for the users managment panel route.
+     *
+     * @param integer $page The page of users to display.
+     * @return void
+     * @Route("/users_managment/{page?1}",name="users_managment")
+     */
+    public function usersControlPanel(int $page){
+        $usersRepo = $this->getDoctrine()->getRepository(User::class);
+        $users = $usersRepo->findUsersByPageWithSearchCriteria($page,10);
+        $isLastPage = ($page == $users['numberOfPages']);
+        return $this->render("admin/admin_users_view.html.twig",
+        [
+            'users' => $users['results'],
+            'isLastPage' => $isLastPage
+        ]);
+    }
 }

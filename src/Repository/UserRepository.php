@@ -48,6 +48,41 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
+    /**
+     * A method to return a certain amount of users given a page number.
+     *
+     * @param integer $pageNumber The number of the page
+     * @param integer $numberOfItemsOnPage The number of items on each page
+     * @return Array An array containing the result of the search with the key 'results' and the number of pages with the key 'numberOfPages'
+     */
+    public function findUsersByPageWithSearchCriteria(int $pageNumber, int $numberOfItemsOnPage) : Array
+    { 
+
+        // build the query for the doctrine paginator
+        $query = $this->createQueryBuilder('u')
+        ->orderBy('u.id', 'DESC')
+        ->getQuery();
+
+        // load doctrine Paginator
+        $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
+
+        // you can get total items
+        $totalItems = count($paginator);
+
+        // get total pages
+        $pagesCount = ceil($totalItems / $numberOfItemsOnPage);
+
+        // now get one page's items:
+        $results = $paginator
+            ->getQuery()
+            ->setFirstResult($numberOfItemsOnPage * ($pageNumber - 1)) // set the offset
+            ->setMaxResults($numberOfItemsOnPage)
+            ->execute(); // set the limit
+
+        // return stuff..
+        return ['results' => $results, 'numberOfPages' => $pagesCount];
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

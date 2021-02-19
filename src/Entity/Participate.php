@@ -28,7 +28,7 @@ class Participate
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      * @ApiProperty(identifier=true)
      */
     private $user_id;

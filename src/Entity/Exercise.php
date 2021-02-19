@@ -42,7 +42,7 @@ class Exercise
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $creator;
 

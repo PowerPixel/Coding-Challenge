@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CodingChallenge - {{ exercise.Name }}{% endblock %}
+{% block titre_page %}
+    {{ exercise.Name }}
+{% endblock %}
+{% block body %}
+<div>
+{{ description }}
+</div>
+{% endblock %}

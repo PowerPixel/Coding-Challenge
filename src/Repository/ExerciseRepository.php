@@ -14,7 +14,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ExerciseRepository extends ServiceEntityRepository
 {
-    public static $PATH_TO_EXERCISES_FOLDER = "../exercises";
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Exercise::class);

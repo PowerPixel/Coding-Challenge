@@ -13,6 +13,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  */
 class Exercise
 {
+    public static $PATH_TO_EXERCISES_FOLDER = "../exercises";
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -105,7 +106,7 @@ class Exercise
 
     public function getFolderPath(): ?string
     {
-        return $this->folder_path;
+        return Exercise::$PATH_TO_EXERCISES_FOLDER . $this->folder_path;
     }
 
     public function setFolderPath(string $folder_path): self

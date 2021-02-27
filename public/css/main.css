@@ -88,3 +88,6 @@ p.erreur {
   font-weight: bold;
 }
 
+#editor{
+  height: 40vh;
+}

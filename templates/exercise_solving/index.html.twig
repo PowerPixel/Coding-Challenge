@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
-
+{% block js %}
+    <script src="https://pagecdn.io/lib/ace/1.4.12/ace.js"></script>
+    <script src="{{ asset("js/dynamic-language-loader.js") }}"></script>
+{% endblock %}
 {% block title %}CodingChallenge - {{ exercise.Name }}{% endblock %}
 {% block titre_page %}
     {{ exercise.Name }}
@@ -7,5 +10,28 @@
 {% block body %}
 <div>
 {{ description }}
+</div>
+<div id="code-edit-area">
+    <select id="languageSelect" onchange="loadLanguage(this);">
+            <option value="c_cpp">C</option>
+            <option value="c_cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="fsharp">F#</option>
+            <option value="java">Java</option>
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python 3</option>
+            <option value="rust">Rust</option>
+        </select>
+    <div id="editor" style="height 40vh;">// Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
+// Appuyez sur entrée pour rajouter des lignes à votre code.</div>
+    <script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/javascript");
+    editor.setOptions({
+    maxLines: 25
+    });
+    loadLanguage(document.querySelector("#languageSelect"));
+</script>    
 </div>
 {% endblock %}

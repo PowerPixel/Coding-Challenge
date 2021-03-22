@@ -27,14 +27,14 @@ class Solving
     private $completed_test_amount;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $user_id;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Exercise::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity=Exercise::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $exercise_id;
 

@@ -9,11 +9,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\Constraints\Json;
 
+/**
+ * @Route("/exercise/{id}")
+ */
 class ExerciseSolvingController extends AbstractController
 {
     /**
-     * @Route("/exercise/{id}/solve", name="exercise_solving")
+     * @Route("/solve", name="exercise_solving")
      * @IsGranted("ROLE_USER")
      */
     public function index(int $id,LoggerInterface $logger): Response
@@ -36,5 +43,24 @@ class ExerciseSolvingController extends AbstractController
             'description' => $description,
             //'lastSubmittedCode' => $lastSubmittedCode
         ]);
+    }
+    /**
+     * @Route("/run", name="run")
+     */
+    public function run(Request $request,HttpClientInterface $client){
+        if($request->isXmlHttpRequest()){
+            $programData = json_decode($request->getContent(), true);
+            $response = $client->request(
+                'POST',
+                'http://localhost:42920/run',
+                [
+                    'body' => json_encode($programData["submittedCode"])
+                ]
+            );
+            $response->getInfo('debug');
+            $returnedData = $response->getContent();
+            return new Response($returnedData);
+        }
+        return new JsonResponse("Not Authorized");
     }
 }

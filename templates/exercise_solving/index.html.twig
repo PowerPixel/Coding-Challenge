@@ -11,21 +11,31 @@
 <div>
 {{ description }}
 </div>
+<hr/>
 <div id="code-edit-area">
     <select id="languageSelect" onchange="loadLanguage(this);">
-            <option value="c_cpp">C</option>
-            <option value="c_cpp">C++</option>
-            <option value="csharp">C#</option>
-            <option value="fsharp">F#</option>
-            <option value="java">Java</option>
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python 3</option>
-            <option value="rust">Rust</option>
+            <option value="[&quot;c_cpp&quot;,&quot;c&quot;]">C</option>
+            <option value="[&quot;c_cpp&quot;,&quot;c++&quot;]">C++</option>
+            <option value="[&quot;csharp&quot;,&quot;c#&quot;]">C#</option>
+            <option value="[&quot;java&quot;,&quot;java&quot;]">Java</option>
+            <option value="[&quot;javascript&quot;,&quot;javascript&quot;]">JavaScript</option>
+            <option value="[&quot;python&quot;,&quot;python&quot;]">Python 3.7</option>
+            <option value="[&quot;rust&quot;,&quot;rust&quot;]">Rust</option>
         </select>
-    <div id="editor" style="height 40vh;">
-// Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
+    <div id="editor" style="height 40vh;">// Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
 // Appuyez sur entrée pour rajouter des lignes à votre code.</div>
-    <script>
+<br/>
+<a onclick="submitCode()"><div class="btn btn-primary">Soumettre la solution</div></a>
+</div>
+<br/>
+<div id="outputs-div">
+    <div id="tests-output" class="output">
+    </div>
+    <div id="errors-output" class="output">
+    </div>
+</div>
+<script>
+    var userId = {{ app.user.id }};
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/javascript");
@@ -33,6 +43,54 @@
     maxLines: 25
     });
     loadLanguage(document.querySelector("#languageSelect"));
+    function submitCode() {
+        let languageSelectNode = document.querySelector("#languageSelect");
+
+        var req = {
+            "userId": userId,
+            "submittedCode":
+            {
+                "lang": JSON.parse(languageSelectNode.value)[1],
+                "source": editor.getValue()
+            }
+
+        };
+        document.querySelector("#tests-output").textContent = "Tests en cours...";
+        let ajax = new XMLHttpRequest();
+        ajax.open("POST","{{ path('run', {'id' : app.request.attributes.get('_route_params')['id']}) }}",false);
+        ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        ajax.send(JSON.stringify(req));
+        let jsonData = JSON.parse(ajax.responseText);
+        console.log(jsonData);
+        if(jsonData.compile != undefined && jsonData.compile.exitcode != 0){
+            document.querySelector("#tests-output").textContent = "";
+            document.querySelector("#errors-output").textContent = "Erreur de compilation !\r\n" + jsonData.compile.stderr;
+        }
+        else{
+            jsonData.tests.forEach(el => {
+                document.querySelector("#tests-output").textContent = el.name + ': \r\n' + el.stdout;
+                document.querySelector("#errors-output").textContent = el.name + ': \r\n\t' + el.stderr;
+            });
+        }
+        
+        
+
+        /*
+        $.ajax({
+            url: "{{ path('run', {'id' : app.request.attributes.get('_route_params')['id']}) }}",
+            type: 'POST',
+            data: JSON.stringify(req),
+            dataType: 'json',
+            success : function(data) {          
+                let jsonData = JSON.parse(data);
+                console.log(jsonData['compile']);
+                $("#tests-output").append();  
+
+            },
+            error : function() {
+                alert("Une erreur est survenue");
+            }
+        })*/
+    }
 </script>    
-</div>
 {% endblock %}

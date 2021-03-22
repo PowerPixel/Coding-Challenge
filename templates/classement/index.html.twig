@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coding challenge - Classement global{% endblock %}
+
+{% block body %}
+
+<table id='classement_global'>
+    {% for user in users %}
+    <td>
+        <tr> {{user.username}} </tr>
+        <tr> {{score[user]}} </tr>
+    </td>
+    {% endfor %}
+</table>
+{% endblock %}

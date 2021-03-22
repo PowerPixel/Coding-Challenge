@@ -23,13 +23,13 @@ class Solving
     private $completed_test_amount;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
      */
     private $user_id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Exercise::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Exercise::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false)
      */
     private $exercise_id;

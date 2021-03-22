@@ -56,6 +56,11 @@ class User implements UserInterface
      */
     private $join_date;
 
+    /**
+     * @ORM\Column(type="string", length=32, unique=true)
+     */
+    private $api_key;
+
     public function __construct()
     {
         // your own logic
@@ -179,6 +184,18 @@ class User implements UserInterface
     public function setJoinDate(\DateTimeInterface $join_date): self
     {
         $this->join_date = $join_date;
+
+        return $this;
+    }
+
+    public function getApiKey(): ?string
+    {
+        return $this->api_key;
+    }
+
+    public function setApiKey(string $api_key): self
+    {
+        $this->api_key = $api_key;
 
         return $this;
     }

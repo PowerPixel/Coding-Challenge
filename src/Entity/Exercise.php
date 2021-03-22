@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\ExerciseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ExerciseRepository::class)
+ * @ApiResource(collectionOperations={"get"},
+ *              itemOperations={"get"})
  */
 class Exercise
 {
@@ -39,7 +42,7 @@ class Exercise
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $creator;
 

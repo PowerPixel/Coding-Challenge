@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -16,7 +18,7 @@ class User implements UserInterface
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",)
      */
     private $id;
 
@@ -56,10 +58,16 @@ class User implements UserInterface
      */
     private $join_date;
 
+    /**
+     * @ORM\Column(type="string", length=32,unique=true,nullable=false)
+     */
+    private $api_key;
+
     public function __construct()
     {
         // your own logic
         $this->roles = array('ROLE_NEW_USER');
+        $this->api_key = md5(random_bytes(32));
     }
 
     public function getId(): ?int
@@ -179,6 +187,18 @@ class User implements UserInterface
     public function setJoinDate(\DateTimeInterface $join_date): self
     {
         $this->join_date = $join_date;
+
+        return $this;
+    }
+
+    public function getApiKey(): ?string
+    {
+        return $this->api_key;
+    }
+
+    public function setApiKey(string $api_key): self
+    {
+        $this->api_key = $api_key;
 
         return $this;
     }

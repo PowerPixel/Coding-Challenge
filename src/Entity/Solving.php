@@ -5,8 +5,12 @@ namespace App\Entity;
 use App\Repository\SolvingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
  * @ORM\Entity(repositoryClass=SolvingRepository::class)
+ * @ApiResource(collectionOperations={"get"},
+ *              itemOperations={"put","get"})
  */
 class Solving
 {
@@ -24,7 +28,7 @@ class Solving
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $user_id;
 

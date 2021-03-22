@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\ChallengeRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ChallengeRepository::class)
+ * @ApiResource(collectionOperations={"get"},
+ *              itemOperations={"get"})
  */
 class Challenge
 {

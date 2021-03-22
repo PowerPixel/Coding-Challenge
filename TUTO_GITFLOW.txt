@@ -1,0 +1,12 @@
+git flow <feature/hotfix> start <nom>
+
+# tant que pas fini de coder
+    # modifications fichiers
+    git add *
+    git commit -am "message"
+
+# quand fini la feature ou le fix
+git flow <feature/hotfix> publish <nom>
+# merge sur gitlab
+
+git flow <feature/hotfix> delete <nom>

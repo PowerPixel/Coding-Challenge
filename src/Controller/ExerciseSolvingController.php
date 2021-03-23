@@ -60,19 +60,20 @@ class ExerciseSolvingController extends AbstractController
             $response->getInfo('debug');
             $returnedData = $response->getContent();
 
+            // Saving user solution on database
             $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
             $solvingEntry = $solvingRepo->findOneBy([
                 "user_id" => $programData["userId"],
                 "exercice_id" => $programData["exerciseId"]
             ]);
             if(isset($solvingEntry)) {
-                $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]);
+                $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]["source"]);
             } else {
                 $newSolving = new Solving()
                     .setUserId($programData["userId"])
                     .setExerciseId($programData["exerciseId"])
                     .setCompletedTestAmount()
-                    .setLastSubmittedCode($programData["sumbittedCode"]);
+                    .setLastSubmittedCode($programData["sumbittedCode"]["source"]);
             }
 
             $entityManager = $this->getDoctrine()->getManager();

@@ -95,18 +95,3 @@ INSERT INTO `restricted_language` (`restricted_id`, `language_id`) VALUES
 (3, 6),
 (4, 3),
 (4, 7);
-
-INSERT INTO `solving` (`id`, `completed_test_amount`, `last_submitted_code`) VALUES
-(1, 3, 'print(\'Hello World\')'),
-(2, 2, 'System.out.println(\"Hello World\");'),
-(3, 5, 'printf(\"Hello World\");'),
-(4, 0, 'console.log(\"Hello World\");'),
-(5, 1, 'echo \"Hello World\";'),
-(6, 4, 'std::cout << \"Hello World\";'),
-(7, 8, 'Console.WriteLine(\"Hello World\");'),
-(8, 7, 'printfn \"Hello World\"'),
-(9, 5, 'println!(\"Hello, world!\");'),
-(10, 0, '++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++. >+. +++++++. . +++. >++.<<+++++++++++++++. >. +++. ------. --------. >+. >.'),
-(11, 0, 'HAI\nCAN HAS STDIO?\nVISIBLE \"HELLO WORLD\"\nKTHXBYE'),
-(12, 0, 'Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook? Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook. Ook. Ook? Ook. Ook? Ook. Ook? Ook. Ook? Ook. Ook! Ook! Ook? Ook! Ook. Ook? Ook. Ook. Ook. Ook. Ook! Ook. Ook. Ook? Ook. Ook. Ook! Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook! Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook. Ook? Ook. Ook. Ook. Ook. Ook! Ook. Ook? Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook. Ook? Ook! Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook. Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook. Ook. Ook? Ook. Ook. Ook! Ook. Ook. Ook? Ook! Ook. Ook? Ook?');
-

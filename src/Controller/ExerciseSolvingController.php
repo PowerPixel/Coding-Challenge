@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Exercise;
 use App\Entity\Solving;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,13 +32,16 @@ class ExerciseSolvingController extends AbstractController
         $description = file_get_contents($exerciseFolderPath . "/description.txt");
         $user = $this->getUser();
         $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
+        $lastSubmittedCode = "";
         //$logger->info(var_dump($user));
         if(isset($user)){
             $solvingEntry = $solvingRepo->findOneBy([
                 "user_id" => $user->getId()
             ]);
         }
-        $lastSubmittedCode = $solvingEntry->getLastSubmittedCode();
+        if(isset($solvingEntry)) {
+            $lastSubmittedCode = $solvingEntry->getLastSubmittedCode();
+        }
         return $this->render('exercise_solving/index.html.twig', [
             'exercise' => $exercise,
             'description' => $description,
@@ -50,11 +54,31 @@ class ExerciseSolvingController extends AbstractController
     public function run(Request $request,HttpClientInterface $client){
         if($request->isXmlHttpRequest()){
             $programData = json_decode($request->getContent(), true);
+
+            $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
+            $exercise = $exercisesRepo->find($programData["exerciseId"]);
+            $pathToExercise = $exercise->getFolderPath();
+            $inputFiles = glob($pathToExercise . '/input[0-9]*.txt');
+            $inputTests = array();
+            for($i = 0; $i < count($inputFiles); $i++) {
+                $content = file_get_contents($inputFiles[$i]);
+                $inputTests[] = [
+                    "name" => "test " . $i,
+                    "stdin" => $content
+                ];
+            }
+            
+            $datas = [
+                "lang" => $programData["submittedCode"]["lang"],
+                "source" => $programData["submittedCode"]["source"],
+                "tests" => $inputTests
+            ];
+
             $response = $client->request(
                 'POST',
                 'http://localhost:42920/run',
                 [
-                    'body' => json_encode($programData["submittedCode"])
+                    'body' => json_encode($datas)
                 ]
             );
             $response->getInfo('debug');
@@ -64,22 +88,24 @@ class ExerciseSolvingController extends AbstractController
             $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
             $solvingEntry = $solvingRepo->findOneBy([
                 "user_id" => $programData["userId"],
-                "exercice_id" => $programData["exerciseId"]
+                "exercise_id" => $programData["exerciseId"]
             ]);
             if(isset($solvingEntry)) {
                 $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]["source"]);
             } else {
-                $newSolving = new Solving()
-                    .setUserId($programData["userId"])
-                    .setExerciseId($programData["exerciseId"])
-                    .setCompletedTestAmount()
-                    .setLastSubmittedCode($programData["sumbittedCode"]["source"]);
+                $userRepo = $this->getDoctrine()->getRepository(User::class);
+                $user = $userRepo->find($programData["userId"]);
+                $newSolving = new Solving();
+                $newSolving->setUserId($user);
+                $newSolving->setExerciseId($exercise);
+                $newSolving->setCompletedTestAmount(42);
+                $newSolving->setLastSubmittedCode($programData["submittedCode"]["source"]);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($newSolving);
             $entityManager->flush();
-
+            
             return new Response($returnedData);
         }
         return new JsonResponse("Not Authorized");

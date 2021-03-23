@@ -60,7 +60,7 @@ a:hover {
   cursor: pointer;
 }
 
-th {
+th,td {
   color: white;
   border: thin solid white;
 }
@@ -77,8 +77,11 @@ table {
   border-collapse: collapse;
 }
 /* Couleur des lignes impaires */
-table tr:nth-child(odd) {
-  background-color: #ccccff;
+table tr:nth-child(even) {
+  background-color: #292929a6;
+}
+thead tr th{
+  background-color: #515151;
 }
 
 /* Pour les messages d'erreurs */

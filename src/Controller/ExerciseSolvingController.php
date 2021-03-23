@@ -63,7 +63,7 @@ class ExerciseSolvingController extends AbstractController
             for($i = 0; $i < count($inputFiles); $i++) {
                 $content = file_get_contents($inputFiles[$i]);
                 $inputTests[] = [
-                    "name" => "test " . $i,
+                    "name" => "test " . $i+1,
                     "stdin" => $content
                 ];
             }

@@ -8,7 +8,7 @@ body {
 }
 
 .logo{
-  margin-top:-8%;
+  float:left;
   width: 10%;
   position:relative;
   margin-left: -20%;

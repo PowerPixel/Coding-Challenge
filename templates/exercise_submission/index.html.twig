@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Coding Challenge - Soumission d'exercice{% endblock %}
+{% block titre_page %}Soumettre un exercice{% endblock %}
+
+{% block body %}
+{% if error is defined %}
+<div class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{{ form(form) }}
+{% endblock %}

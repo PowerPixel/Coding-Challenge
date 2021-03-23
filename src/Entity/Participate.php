@@ -35,7 +35,7 @@ class Participate
 
     /**
      * @ORM\ManyToMany(targetEntity=Challenge::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="challenge", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="challenge", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $challenge_id;
 

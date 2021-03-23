@@ -13,12 +13,14 @@
 		{% block stylesheets %}
 			<link rel="stylesheet" type="text/css" href="{{asset('css/main.css')}}"/>
 		{% endblock %}
+		{% block js %}
+		{% endblock %}
 	</head>
 	<header>
 		{% include('navbar.html.twig') %}
 	</header>
 	<body class="container">
-	
+		<img src="img/logo.png" alt="logo" class="logo">
 		<h2>
 			{% block titre_page %}
 			{% endblock %}

@@ -37,11 +37,11 @@ class ExerciseSolvingController extends AbstractController
                 "user_id" => $user->getId()
             ]);
         }
-        // $lastSubmittedCode = $solvingEntry->getLastSubmittedCode();
+        $lastSubmittedCode = $solvingEntry->getLastSubmittedCode();
         return $this->render('exercise_solving/index.html.twig', [
             'exercise' => $exercise,
             'description' => $description,
-            //'lastSubmittedCode' => $lastSubmittedCode
+            'lastSubmittedCode' => $lastSubmittedCode
         ]);
     }
     /**
@@ -59,6 +59,26 @@ class ExerciseSolvingController extends AbstractController
             );
             $response->getInfo('debug');
             $returnedData = $response->getContent();
+
+            $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
+            $solvingEntry = $solvingRepo->findOneBy([
+                "user_id" => $programData["userId"],
+                "exercice_id" => $programData["exerciseId"]
+            ]);
+            if(isset($solvingEntry)) {
+                $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]);
+            } else {
+                $newSolving = new Solving()
+                    .setUserId($programData["userId"])
+                    .setExerciseId($programData["exerciseId"])
+                    .setCompletedTestAmount()
+                    .setLastSubmittedCode($programData["sumbittedCode"]);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($newSolving);
+            $entityManager->flush();
+
             return new Response($returnedData);
         }
         return new JsonResponse("Not Authorized");

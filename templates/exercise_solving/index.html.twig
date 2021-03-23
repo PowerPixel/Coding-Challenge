@@ -36,6 +36,7 @@
 </div>
 <script>
     var userId = {{ app.user.id }};
+    var exerciseId = {{ exercise.Id }}
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/javascript");
@@ -48,6 +49,7 @@
 
         var req = {
             "userId": userId,
+            "exerciseId": exerciseId,
             "submittedCode":
             {
                 "lang": JSON.parse(languageSelectNode.value)[1],
@@ -68,7 +70,7 @@
         }
         else{
             jsonData.tests.forEach(el => {
-                document.querySelector("#tests-output").textContent = el.name + ': \r\n' + el.stdout;
+                document.querySelector("#tests-output").textContent = el.name + ': \r\n\t' + el.stdout;
                 document.querySelector("#errors-output").textContent = el.name + ': \r\n\t' + el.stderr;
             });
         }

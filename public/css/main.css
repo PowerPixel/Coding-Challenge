@@ -88,3 +88,25 @@ p.erreur {
   font-weight: bold;
 }
 
+#editor{
+  height: 40vh;
+}
+
+#outputs-div{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.output{
+  height: 20vh;
+  width: 45%;
+  background-color: #131718;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  padding-left: 20px;
+  padding-top: 10px;
+  overflow-wrap: break-word;
+  overflow: auto;
+}

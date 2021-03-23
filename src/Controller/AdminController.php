@@ -138,7 +138,7 @@ class AdminController extends AbstractController
     {
         $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
         $exercise = $exercisesRepo->find($id);
-        $pathToExercise = ExerciseRepository::$PATH_TO_EXERCISES_FOLDER . $exercise->getFolderPath();
+        $pathToExercise = $exercise->getFolderPath();
         $inputFiles = glob($pathToExercise . '/input*');
         $outputFiles = glob($pathToExercise . '/output*');
         $inputContents = array();

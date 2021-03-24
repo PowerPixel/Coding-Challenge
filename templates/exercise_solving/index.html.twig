@@ -28,6 +28,8 @@
 <a onclick="submitCode()"><div class="btn btn-primary">Soumettre la solution</div></a>
 </div>
 <br/>
+<div id="score" class="">
+</div>
 <div id="outputs-div">
     <div id="tests-output" class="output">
     </div>
@@ -35,7 +37,6 @@
     </div>
 </div>
 <br/>
-<div id="score"></div>
 <script>
     var userId = {{ app.user.id }};
     var exerciseId = {{ exercise.Id }};
@@ -81,9 +82,20 @@
                 out.textContent += el.name + " :\r\n\t" + el.stdout + "\r\n\r\n";
                 err.textContent += el.stderr == "" ? "" : el.name + " :\r\n" + el.stderr + "\r\n" + (el.stderr.slice(-1) ==  '\n' ? "" : "\r\n");
             }
-        document.querySelector("#score").textContent = score + "/" + jsonData.length + " tests passés";
         });
-
+        let scoreDiv = document.querySelector("#score");
+        scoreDiv.className = "alert";
+        if(score == 0) {
+            scoreDiv.classList.add("alert-danger");
+            scoreDiv.textContent = "Aucun test passé...";
+        } else if (score == jsonData.length) {
+            scoreDiv.classList.add("alert-success");
+            scoreDiv.textContent = "Tous les tests passés !";
+        } else {
+            scoreDiv.classList.add("alert-warning");
+            scoreDiv.textContent = score + "/" + jsonData.length + " tests passés";
+        }
+        
         
         
 

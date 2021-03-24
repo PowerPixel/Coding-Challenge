@@ -9,6 +9,6 @@
     {% if  app.user %}
         <a href=""><div class="btn btn-primary">Résoudre l'exercice</div></a>
     {% else %}
-        <a href="{{ path('app_register') }}">Inscrivez vouz</a> ou <a href="{{ path('app_login') }}">connectez vous</a> afin de résoudre l'exercice.
+        <a class='newLink' href="{{ path('app_register') }}">Inscrivez-vouz</a> ou <a class='newLink' href="{{ path('app_login') }}">connectez-vous</a> afin de résoudre l'exercice.
     {% endif %}
 {% endblock %}

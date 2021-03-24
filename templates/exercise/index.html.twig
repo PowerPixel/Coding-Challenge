@@ -8,18 +8,15 @@
     <p>{{ exercise.description }}</p>
     {% if  app.user %}
         <a href="{{ path('exercise_solving',{id:exercise.id}) }}"><div class="btn btn-primary">Résoudre l'exercice</div></a>
-        <i id="led" class="far fa-lightbulb fa-2x" data-toggle="modal" data-target="#exo-help"></i>
+        <i id="led" class="far fa-lightbulb fa-2x" data-toggle="modal" data-target="#exo-help" style="position:absolute;margin-left:1%;"></i>
         <div class="modal" id="exo-help" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" style="background-color: #2a3238;">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Aide exercice</h5>
-                    </div>
                     <div class="modal-body">
-                        <p>Bienvenue sur l'aide exercice</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer l'aide</button>
+                        <h5 class="modal-title">Aide exercice</h5><br>
+                        <p>En cliquant sur le bouton "Résoudre l'exercice", vous allez être redirigé vers une nouvelle page avec un IDE intégré, dans lequel vous
+                        pourrez tenter de résoudre l'exercice avec le langage de votre choix (parmi nos langages supportés).</p><br>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="float:right">Fermer l'aide</button>
                     </div>
                 </div>
             </div>

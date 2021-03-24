@@ -168,12 +168,26 @@ class AdminController extends AbstractController
      */
     public function usersControlPanel(int $page){
         $usersRepo = $this->getDoctrine()->getRepository(User::class);
-        $users = $usersRepo->findUsersByPageWithSearchCriteria($page,10);
+        $users = $usersRepo->findUsersByPage($page,10);
         $isLastPage = ($page == $users['numberOfPages']);
         return $this->render("admin/admin_users_view.html.twig",
         [
             'users' => $users['results'],
             'isLastPage' => $isLastPage
+        ]);
+    }
+    /**
+     * @Route("/exercises_approval", name="exercises_approval")
+     */
+    public function exercisesApprovalPanel(): Response
+    {
+        $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercises = $exercisesRepo->findBy([
+            'state' => 1,
+        ]);
+        return $this->render("admin/admin_exercises_approval_view.html.twig",
+        [
+            'exercises' => $exercises
         ]);
     }
 }

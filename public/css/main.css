@@ -8,7 +8,7 @@ body {
 }
 
 .logo{
-  margin-top:-8%;
+  float:left;
   width: 10%;
   position:relative;
   margin-left: -20%;
@@ -38,6 +38,17 @@ h1 {
   background-color: white;
   text-align: center;
 }
+.newLink:link{
+  color:#82c052;}
+
+.newLink:visited{
+  color:#82c052;}
+
+.newLink:hover{
+  text-decoration: none;
+  color: white;
+  background: #7b906a;
+  cursor: pointer;}
 
 a:link {
   text-decoration: none;
@@ -59,8 +70,7 @@ a:hover {
   background: #999999;
   cursor: pointer;
 }
-
-th {
+th,td {
   color: white;
   border: thin solid white;
 }
@@ -77,8 +87,11 @@ table {
   border-collapse: collapse;
 }
 /* Couleur des lignes impaires */
-table tr:nth-child(odd) {
-  background-color: #ccccff;
+table tr:nth-child(even) {
+  background-color: #292929a6;
+}
+thead tr th{
+  background-color: #515151;
 }
 
 /* Pour les messages d'erreurs */

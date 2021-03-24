@@ -18,7 +18,7 @@
 				<td>{{ exercise.name }}</td>
 				<td>{{ exercise.creator.username }}</td>
 				<td>{{ exercise.submitDate|date("d/m/Y")}}</td>
-				<td><a href="#"><i class="fas fa-eye"></i></a></td>
+				<td><a href="{{ path("individual_exercises_approval", {id:exercise.id}) }}"><i class="fas fa-eye"></i></a></td>
 			</tr>
 		{% endfor %}
 	</tbody>

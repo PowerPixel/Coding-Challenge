@@ -56,7 +56,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * @param integer $numberOfItemsOnPage The number of items on each page
      * @return Array An array containing the result of the search with the key 'results' and the number of pages with the key 'numberOfPages'
      */
-    public function findUsersByPageWithSearchCriteria(int $pageNumber, int $numberOfItemsOnPage) : Array
+    public function findUsersByPage(int $pageNumber, int $numberOfItemsOnPage) : Array
     { 
 
         // build the query for the doctrine paginator

@@ -22,21 +22,66 @@
             <option value="[&quot;python&quot;,&quot;python&quot;]">Python 3.7</option>
             <option value="[&quot;rust&quot;,&quot;rust&quot;]">Rust</option>
         </select>
+        <i id="led" class="far fa-lightbulb fa-lg" data-toggle="modal" data-target="#exo-help" style="position:absolute;margin-left:1%;"></i>
+        <div class="modal" id="exo-help" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="background-color: #2a3238;">
+                    <div class="modal-body">
+                        <h5 class="modal-title">Choix langage</h5><br>
+                        <p>Vous pouvez, en cliquant sur la petite flèche, choisir le langage de votre choix afin de résoudre l'exercice.
+                        Nous vous conseillons de prendre un langage que vous connaissez bien, ou alors un que vous voulez / êtes entrain d'apprendre.</p><br>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="float:right">Fermer l'aide</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     <div id="editor" style="height 40vh;">{% if lastSubmittedCode is defined %}{{lastSubmittedCode}}{% else %} // Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
 // Appuyez sur entrée pour rajouter des lignes à votre code.{% endif %}</div>
 <br/>
 <a onclick="submitCode()"><div class="btn btn-primary">Soumettre la solution</div></a>
+        <i id="led2" class="far fa-lightbulb fa-2x" data-toggle="modal" data-target="#exo-help2" style="position:absolute;margin-left:1%;"></i>
+        <div class="modal" id="exo-help2" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="background-color: #2a3238;">
+                    <div class="modal-body">
+                        <h5 class="modal-title">Soumission d'une solution</h5><br>
+                        <p>Lorsque vous cliquez sur le bouton "Soumettre la solution", votre code passera une batterie de tests afin de savoir s'il résout l'exercice donné ou non.
+                        <br>La console de gauche affiche la sortie standard du compilateur, tandis que celle de droite affiche les erreurs.
+                        <br>De plus, votre code est enregistré à chaque soumission. Donc si vous partez et revenez votre code sera comme la dernière fois que vous l'avez soumis.</p><br>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="float:right">Fermer l'aide</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 <br/>
+<div id="score"></div>
+<table>
+<tr><td style="border-style:none;">Sortie standard</td>
+<td style="border-style:none;position:relative;left:225%;">Sortie d'erreurs</td></tr>
+</table>
 <div id="outputs-div">
     <div id="tests-output" class="output">
     </div>
     <div id="errors-output" class="output">
     </div>
 </div>
-<br/>
-<div id="score"></div>
+<script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>
+{% block javascripts %}
 <script>
+    $('#led').mouseenter(function() {
+    $('#led').removeClass("far").addClass("fas");
+    }),
+    $('#led').mouseleave(function() {
+        $('#led').removeClass("fas").addClass("far");
+    })
+    $('#led2').mouseenter(function() {
+    $('#led2').removeClass("far").addClass("fas");
+    }),
+    $('#led2').mouseleave(function() {
+        $('#led2').removeClass("fas").addClass("far");
+    })
+
     var userId = {{ app.user.id }};
     var exerciseId = {{ exercise.Id }};
     var editor = ace.edit("editor");
@@ -81,12 +126,22 @@
                 out.textContent += el.name + " :\r\n\t" + el.stdout + "\r\n\r\n";
                 err.textContent += el.stderr == "" ? "" : el.name + " :\r\n" + el.stderr + "\r\n" + (el.stderr.slice(-1) ==  '\n' ? "" : "\r\n");
             }
-        document.querySelector("#score").textContent = score + "/" + jsonData.length + " tests passés";
         });
-
+        let scoreDiv = document.querySelector("#score");
+        scoreDiv.className = "alert";
+        if(score == 0) {
+            scoreDiv.classList.add("alert-danger");
+            scoreDiv.textContent = "Aucun test passé...";
+        } else if (score == jsonData.length) {
+            scoreDiv.classList.add("alert-success");
+            scoreDiv.textContent = "Tous les tests passés !";
+        } else {
+            scoreDiv.classList.add("alert-warning");
+            scoreDiv.textContent = score + "/" + jsonData.length + " tests passés";
+        }
         
         
-
+        
         /*
         $.ajax({
             url: "{{ path('run', {'id' : app.request.attributes.get('_route_params')['id']}) }}",
@@ -105,4 +160,5 @@
         })*/
     }
 </script>    
+{% endblock %}
 {% endblock %}

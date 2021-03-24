@@ -59,7 +59,7 @@ class Exercise
 
     /**
      * @ORM\ManyToOne(targetEntity=ExerciseState::class)
-     * @ORM\JoinColumn(name="exercisestate", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="exercisestate", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $state;
 

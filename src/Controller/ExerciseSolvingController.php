@@ -63,7 +63,6 @@ class ExerciseSolvingController extends AbstractController
             for($i = 0; $i < count($inputFiles); $i++) {
                 $content = file_get_contents($inputFiles[$i]);
                 $inputTests[] = [
-                    "name" => "test " . $i+1,
                     "stdin" => $content
                 ];
             }
@@ -82,7 +81,40 @@ class ExerciseSolvingController extends AbstractController
                 ]
             );
             $response->getInfo('debug');
-            $returnedData = $response->getContent();
+            $returnedData = json_decode($response->getContent(), true);
+
+            // Checking the output validity
+            $outputFiles = glob($pathToExercise . '/output[0-9]*.txt');
+            $outputTests = array();
+            $userScore = 0;
+
+            if(isset($returnedData['tests'])) {
+                for($i = 0; $i < count($outputFiles); $i++) {
+                    $content = file_get_contents($outputFiles[$i]);
+                    if(rtrim($content) == rtrim($returnedData['tests'][$i]['stdout'])) {
+                        $userScore ++;
+                        $outputTests[] = [
+                            "name" => "Test " . $i+1,
+                            "check" => TRUE,
+                            "stdout" => "✓ Test passé !",
+                            "stderr" => $returnedData['tests'][$i]['stderr']
+                        ];
+                    } else {
+                        $outputTests[] = [
+                            "name" => "Test " . $i+1,
+                            "check" => FALSE,
+                            "stdout" => "✗ Test échoué : Sortie incorrecte",
+                            "stderr" => $returnedData['tests'][$i]['stderr']
+                        ];
+                    }
+                }
+            } else {
+                $outputTests[] = [
+                    "check" => FALSE,
+                    "stdout" => "✗ Tests échoués : Erreur de compilation",
+                    "stderr" => $returnedData['compile']['stderr']
+                ];
+            }
 
             // Saving user solution on database
             $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
@@ -92,13 +124,14 @@ class ExerciseSolvingController extends AbstractController
             ]);
             if(isset($solvingEntry)) {
                 $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]["source"]);
+                $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
             } else {
                 $userRepo = $this->getDoctrine()->getRepository(User::class);
                 $user = $userRepo->find($programData["userId"]);
                 $newSolving = new Solving();
                 $newSolving->setUserId($user);
                 $newSolving->setExerciseId($exercise);
-                $newSolving->setCompletedTestAmount(42);
+                $newSolving->setCompletedTestAmount($userScore);
                 $newSolving->setLastSubmittedCode($programData["submittedCode"]["source"]);
             }
 
@@ -106,7 +139,7 @@ class ExerciseSolvingController extends AbstractController
             $entityManager->persist($newSolving);
             $entityManager->flush();
             
-            return new Response($returnedData);
+            return new Response(json_encode($outputTests));
         }
         return new JsonResponse("Not Authorized");
     }

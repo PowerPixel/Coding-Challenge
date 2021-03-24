@@ -22,8 +22,8 @@
             <option value="[&quot;python&quot;,&quot;python&quot;]">Python 3.7</option>
             <option value="[&quot;rust&quot;,&quot;rust&quot;]">Rust</option>
         </select>
-    <div id="editor" style="height 40vh;">// Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
-// Appuyez sur entrée pour rajouter des lignes à votre code.</div>
+    <div id="editor" style="height 40vh;">{% if lastSubmittedCode is defined %}{{lastSubmittedCode}}{% else %} // Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
+// Appuyez sur entrée pour rajouter des lignes à votre code.{% endif %}</div>
 <br/>
 <a onclick="submitCode()"><div class="btn btn-primary">Soumettre la solution</div></a>
 </div>
@@ -34,11 +34,15 @@
     <div id="errors-output" class="output">
     </div>
 </div>
+<br/>
+<div id="score"></div>
 <script>
     var userId = {{ app.user.id }};
+    var exerciseId = {{ exercise.Id }};
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/javascript");
+    editor.setFontSize(18);
     editor.setOptions({
     maxLines: 25
     });
@@ -48,6 +52,7 @@
 
         var req = {
             "userId": userId,
+            "exerciseId": exerciseId,
             "submittedCode":
             {
                 "lang": JSON.parse(languageSelectNode.value)[1],
@@ -55,23 +60,30 @@
             }
 
         };
-        document.querySelector("#tests-output").textContent = "Tests en cours...";
+        let out = document.querySelector("#tests-output");
+        let err = document.querySelector("#errors-output");
+        out.textContent = "Tests en cours...";
         let ajax = new XMLHttpRequest();
         ajax.open("POST","{{ path('run', {'id' : app.request.attributes.get('_route_params')['id']}) }}",false);
         ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         ajax.send(JSON.stringify(req));
         let jsonData = JSON.parse(ajax.responseText);
         console.log(jsonData);
-        if(jsonData.compile != undefined && jsonData.compile.exitcode != 0){
-            document.querySelector("#tests-output").textContent = "";
-            document.querySelector("#errors-output").textContent = "Erreur de compilation !\r\n" + jsonData.compile.stderr;
-        }
-        else{
-            jsonData.tests.forEach(el => {
-                document.querySelector("#tests-output").textContent = el.name + ': \r\n' + el.stdout;
-                document.querySelector("#errors-output").textContent = el.name + ': \r\n\t' + el.stderr;
-            });
-        }
+        out.textContent = "";
+        err.textContent = "";
+        let score = 0;
+        jsonData.forEach(el => {
+            if(el.check) score ++;
+            if(el.name == undefined) { // compilation error
+                out.textContent = el.stdout;
+                err.textContent = el.stderr;
+            } else {
+                out.textContent += el.name + " :\r\n\t" + el.stdout + "\r\n\r\n";
+                err.textContent += el.stderr == "" ? "" : el.name + " :\r\n" + el.stderr + "\r\n" + (el.stderr.slice(-1) ==  '\n' ? "" : "\r\n");
+            }
+        document.querySelector("#score").textContent = score + "/" + jsonData.length + " tests passés";
+        });
+
         
         
 

@@ -117,7 +117,8 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Vous devez accepter les CGU.',
                     ]),
                 ],
-                'label' => "En cochant cette case, vous acceptez les CGU"
+                'label' => 'En cochant cette case, vous acceptez les <a href="./CGU" target="_blank">CGU</a>',
+                'label_html' => true
             ])
             ->add('Register', SubmitType::class, [
                 "label" => 'S\'inscrire'

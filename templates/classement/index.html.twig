@@ -4,12 +4,19 @@
 
 {% block body %}
 
-<table id='classement_global'>
+<table class="table">
+    <thead>
+			<th>Pseudonyme</th>
+			<th>Score total</th>
+	</thead>
     {% for user in users %}
-    <td>
-        <tr> {{user.username}} </tr>
-        <tr> {{score[user]}} </tr>
-    </td>
+    <tbody>
+        <td>
+            <tr> {{user.username}} </tr>
+            <tr> {{score[user]}} </tr>
+        </td>
+    </tbody>
     {% endfor %}
 </table>
+
 {% endblock %}

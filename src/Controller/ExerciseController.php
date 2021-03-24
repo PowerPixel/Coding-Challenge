@@ -22,8 +22,8 @@ class ExerciseController extends AbstractController
         $users = array();
         foreach ($solves as $solve) {
             $users[] = [
-                "username" => $user_repo->findOneById($solve.getUserId())->getUsername(),
-                "score" => $solve.getScore()
+                "username" => $user_repo->findOneById($solve->getUserId())->getUsername(),
+                "score" => $solve->getCompletedTestAmount()
             ];
         }
         return $this->render('exercise/index.html.twig', [

@@ -127,3 +127,25 @@ p.erreur {
 .leaderboard-exercise {
   float:right;
 }
+
+.table-leaderboard {
+  width:100%;
+}
+
+.table-leaderboard th{
+  padding: 20px;
+  border-right: none;
+  border-left: none;
+  text-align: center;
+}
+
+.table-leaderboard td{
+  
+  padding: 15px;
+  text-align: left;
+  border-right: none;
+  border-left: none;
+}
+.table-leaderboard tr td {
+  text-align: center;
+}

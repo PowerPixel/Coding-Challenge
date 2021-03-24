@@ -57,7 +57,8 @@ class ExerciseSubmissionController extends AbstractController
                     'error' => 'Il y\'a déjà un exercice avec ce nom'
                 ]);
             }
-
+            unlink($archivePath);
+            unlink($tempFolderPath);
             $entityManager = $this->getDoctrine()->getManager();
             $exerciseAndRestrictions = $this->parseExercise($tempFolderPath,$exerciseName);
             $entityManager->persist($exerciseAndRestrictions[0]);
@@ -65,7 +66,7 @@ class ExerciseSubmissionController extends AbstractController
             $exerciseAndRestrictions[1]->setExerciseId($exerciseAndRestrictions[0]);
             $entityManager->persist($exerciseAndRestrictions[1]);
             $entityManager->flush();
-            unlink($archivePath);
+            
             return $this->render('exercise_submission/index.html.twig',[
                 'form' => $form->createView(),
                 'success' => "Exercice soumis avec succés ! Veuillez attendre la validation d'un administrateur."

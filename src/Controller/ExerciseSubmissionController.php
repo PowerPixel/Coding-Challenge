@@ -58,12 +58,7 @@ class ExerciseSubmissionController extends AbstractController
                 ]);
             }
             unlink($archivePath);
-            // Suppression du dossier temporaire, boucle for each sur chaque fichier, car rmdir ne prends en charge que les dossiers vides.
-            $files = array_diff(scandir($tempFolderPath),Array('.','..'));
-            foreach($files as $file){
-                unlink($tempFolderPath . '/' . $file);
-            }
-            rmdir($tempFolderPath);
+            
             $entityManager = $this->getDoctrine()->getManager();
             $exerciseAndRestrictions = $this->parseExercise($tempFolderPath,$exerciseName);
             $entityManager->persist($exerciseAndRestrictions[0]);
@@ -71,7 +66,12 @@ class ExerciseSubmissionController extends AbstractController
             $exerciseAndRestrictions[1]->setExerciseId($exerciseAndRestrictions[0]);
             $entityManager->persist($exerciseAndRestrictions[1]);
             $entityManager->flush();
-            
+            // Suppression du dossier temporaire, boucle for each sur chaque fichier, car rmdir ne prends en charge que les dossiers vides.
+            $files = array_diff(scandir($tempFolderPath),Array('.','..'));
+            foreach($files as $file){
+                unlink($tempFolderPath . '/' . $file);
+            }
+            rmdir($tempFolderPath);
             return $this->render('exercise_submission/index.html.twig',[
                 'form' => $form->createView(),
                 'success' => "Exercice soumis avec succés ! Veuillez attendre la validation d'un administrateur."

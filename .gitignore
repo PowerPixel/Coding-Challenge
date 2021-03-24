@@ -15,4 +15,4 @@ BaseSymfony5.iml
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-
+exercises/

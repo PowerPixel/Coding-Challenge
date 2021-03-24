@@ -6,7 +6,6 @@ use App\Entity\User;
 
 use App\Entity\Exercise;
 use App\Form\AdminRegistrationFormType;
-use App\Repository\ExerciseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\ExerciseState;
 
 /**
  * @Route("/admin")
@@ -168,12 +168,99 @@ class AdminController extends AbstractController
      */
     public function usersControlPanel(int $page){
         $usersRepo = $this->getDoctrine()->getRepository(User::class);
-        $users = $usersRepo->findUsersByPageWithSearchCriteria($page,10);
+        $users = $usersRepo->findUsersByPage($page,10);
         $isLastPage = ($page == $users['numberOfPages']);
         return $this->render("admin/admin_users_view.html.twig",
         [
             'users' => $users['results'],
             'isLastPage' => $isLastPage
         ]);
+    }
+
+    /**
+     * @Route("/exercises_approval", name="exercises_approval")
+     */
+    public function exercisesApprovalPanel(): Response
+    {
+        $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercises = $exercisesRepo->findBy([
+            'state' => 1,
+        ]);
+        return $this->render("admin/admin_exercises_approval_view.html.twig",
+        [
+            'exercises' => $exercises
+        ]);
+    }
+
+    /**
+     * @Route("/exercises_approval/{id}", name="individual_exercises_approval")
+     */
+    public function exercisesApprovalPage(int $id): Response
+    {
+        $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercise = $exercisesRepo->find($id);
+        $exerciseName = str_replace(' ', '',$exercise->getName());
+
+        $inputDescription = file_get_contents(Exercise::$PATH_TO_EXERCISES_FOLDER . "/" . $exerciseName . "/inputDescription.txt");
+        $outputDescription = file_get_contents(Exercise::$PATH_TO_EXERCISES_FOLDER . "/" . $exerciseName . "/outputDescription.txt");
+
+        $pathToExercise = $exercise->getFolderPath();
+        $inputFiles = glob($pathToExercise . '/input[0-9]*.txt');
+        $outputFiles = glob($pathToExercise . '/output[0-9]*.txt');
+        $inputContents = array();
+        $outputContents = array();
+        foreach ($inputFiles as $file) {
+            $content = file_get_contents($file);
+            $inputContents[] = $content;
+        }
+        foreach ($outputFiles as $file) {
+            $content = file_get_contents($file);
+            $outputContents[] = $content;
+        }
+        return $this->render("admin/admin_exercises_approval_view_individual.html.twig",[
+            'exercise' => $exercise,
+            'inputDescription' => $inputDescription,
+            'outputDescription' => $outputDescription,
+            'inputs' => $inputContents,
+            'outputs' => $outputContents
+        ]);
+    }
+
+    /**
+     * @Route("/exercises_approval/{id}/validate", name="exercises_approval_validate")
+     */
+    public function exercisesApprovalValidation(int $id): Response
+    {
+        $exerciseRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercise = $exerciseRepo->find($id);
+        $stateRepo = $this->getDoctrine()->getRepository(ExerciseState::class);
+        $state = $stateRepo->find(2);
+        $exercise->setState($state);
+
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute("exercises_approval");
+    }
+
+    /**
+     * @Route("/exercises_approval/{id}/denied", name="exercises_approval_denied")
+     */
+    public function exercisesApprovalDenial(int $id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $exerciseRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercise = $exerciseRepo->find($id);
+
+        $exerciseFolderName = str_replace(' ', '',$exercise->getName());;
+        $exerciseFolderPath = Exercise::$PATH_TO_EXERCISES_FOLDER . '/' . $exerciseFolderName;
+
+        $files = array_diff(scandir($exerciseFolderPath),Array('.','..'));
+        foreach($files as $file){
+            unlink($exerciseFolderPath . '/' . $file);
+        }
+        rmdir($exerciseFolderPath);
+
+        $entityManager->remove($exercise);
+        $entityManager->flush();
+        return $this->redirectToRoute("exercises_approval");
     }
 }

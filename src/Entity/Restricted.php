@@ -27,7 +27,7 @@ class Restricted
 
     /**
      * @ORM\ManyToMany(targetEntity=Language::class)
-     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $language;
 

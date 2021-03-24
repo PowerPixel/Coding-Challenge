@@ -34,7 +34,7 @@ class Solving
 
     /**
      * @ORM\ManyToOne(targetEntity=Exercise::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $exercise_id;
 

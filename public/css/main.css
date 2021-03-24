@@ -38,6 +38,17 @@ h1 {
   background-color: white;
   text-align: center;
 }
+.newLink:link{
+  color:#82c052;}
+
+.newLink:visited{
+  color:#82c052;}
+
+.newLink:hover{
+  text-decoration: none;
+  color: white;
+  background: #7b906a;
+  cursor: pointer;}
 
 a:link {
   text-decoration: none;
@@ -59,7 +70,6 @@ a:hover {
   background: #999999;
   cursor: pointer;
 }
-
 th,td {
   color: white;
   border: thin solid white;

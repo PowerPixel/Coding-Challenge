@@ -39,7 +39,7 @@ class ExerciseSubmissionController extends AbstractController
             $user = $this->getUser();
             $newFilename = $user->getId() . "-" . date('d-m-Y') . '-' . date('H:i') . "-" . uniqid() . ".zip";
             $file = $form->getData()["fichier"];
-            $exerciseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);;
+            $exerciseName = str_replace(' ','',pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             $file->move('/tmp',$newFilename);
             $archivePath = '/tmp/'.$newFilename;
             $isArchiveValid = $this->verifyExerciseArchive($archivePath);

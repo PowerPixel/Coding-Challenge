@@ -12,8 +12,8 @@
     {% for user in users %}
     <tbody>
         <td>
-            <tr> {{user.username}} </tr>
-            <tr> {{score[user]}} </tr>
+            <tr> {{ user['username'] }} </tr>
+            <tr> {{ user[score] }} </tr>
         </td>
     </tbody>
     {% endfor %}

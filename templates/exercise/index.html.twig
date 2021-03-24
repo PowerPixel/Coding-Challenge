@@ -3,9 +3,27 @@
 {% block title %}{{ exercise.name }} - Coding Challenge{% endblock %}
 {% block titre_page %}{{ exercise.id }} - {{ exercise.name }}{% endblock %}
 {% block body %}
+    <div class="leaderboard-exercise">
+        <p>Classement de l'exercice :</p>
+        <table>
+            <thead>
+                <th>Pseudonyme</th>
+                <th>Score total</th>
+            </thead>
+        {% for user in user_scores %}
+            <tbody>
+                <td>
+                    <tr> {{ user['username'] }} </tr>
+                    <tr> {{ user[score] }} </tr>
+                </td>
+            </tbody>
+        {% endfor %}
+        </table>
+    </div>
     <p>Difficulté : {{ exercise.difficulty }}</p>
     <p>{{ exercise.ApprovedDate|date("d/m/Y") }}</p>
     <p>{{ exercise.description }}</p>
+
     {% if  app.user %}
         <a href=""><div class="btn btn-primary">Résoudre l'exercice</div></a>
     {% endif %}

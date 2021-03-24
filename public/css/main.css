@@ -113,3 +113,7 @@ p.erreur {
   overflow-wrap: break-word;
   overflow: auto;
 }
+
+.leaderboard-exercise {
+  float:right;
+}

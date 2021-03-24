@@ -9,6 +9,11 @@
     {{ error }}
 </div>
 {% endif %}
+{% if success is defined %}
+    <div class="alert alert-success" role="alert">
+        {{ success }}
+    </div> 
+{% endif %}
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {{ form(form) }}
 {% endblock %}

@@ -58,7 +58,12 @@ class ExerciseSubmissionController extends AbstractController
                 ]);
             }
             unlink($archivePath);
-            unlink($tempFolderPath);
+            // Suppression du dossier temporaire, boucle for each sur chaque fichier, car rmdir ne prends en charge que les dossiers vides.
+            $files = array_diff(scandir($tempFolderPath),Array('.','..'));
+            foreach($files as $file){
+                unlink($tempFolderPath . '/' . $file);
+            }
+            rmdir($tempFolderPath);
             $entityManager = $this->getDoctrine()->getManager();
             $exerciseAndRestrictions = $this->parseExercise($tempFolderPath,$exerciseName);
             $entityManager->persist($exerciseAndRestrictions[0]);

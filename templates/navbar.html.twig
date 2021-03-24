@@ -13,7 +13,7 @@
 			</div>
 		</div>
     <div class ="align-right">{{ app.user.username }}</div>
-    <a href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt align-right"></i></a>
+    <a href="{{ path('app_logout') }}">&nbsp;<i class="fas fa-sign-out-alt align-right "></i></a>
 		{% else %}
     <a class="nav-item nav-link" href="{{ path('app_login') }}">Connexion</a>
 		<a class="nav-item nav-link" href="{{ path('app_register') }}">Inscription</a>

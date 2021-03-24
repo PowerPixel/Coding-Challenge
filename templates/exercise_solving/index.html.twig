@@ -69,16 +69,16 @@
 {% block javascripts %}
 <script>
     $('#led').mouseenter(function() {
-    $('#led').removeClass("far fa-lightbulb fa-lg").addClass("fas fa-lightbulb fa-lg");
+    $('#led').removeClass("far").addClass("fas");
     }),
     $('#led').mouseleave(function() {
-        $('#led').removeClass("fas fa-lightbulb fa-lg").addClass("far fa-lightbulb fa-lg");
+        $('#led').removeClass("fas").addClass("far");
     })
     $('#led2').mouseenter(function() {
-    $('#led2').removeClass("far fa-lightbulb fa-2x").addClass("fas fa-lightbulb fa-2x");
+    $('#led2').removeClass("far").addClass("fas");
     }),
     $('#led2').mouseleave(function() {
-        $('#led2').removeClass("fas fa-lightbulb fa-2x").addClass("far fa-lightbulb fa-2x");
+        $('#led2').removeClass("fas").addClass("far");
     })
 
     var userId = {{ app.user.id }};

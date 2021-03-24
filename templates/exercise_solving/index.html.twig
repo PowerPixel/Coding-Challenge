@@ -55,6 +55,7 @@
         </div>
 </div>
 <br/>
+<div id="score"></div>
 <table>
 <tr><td style="border-style:none;">Sortie standard</td>
 <td style="border-style:none;position:relative;left:225%;">Sortie d'erreurs</td></tr>
@@ -125,9 +126,20 @@
                 out.textContent += el.name + " :\r\n\t" + el.stdout + "\r\n\r\n";
                 err.textContent += el.stderr == "" ? "" : el.name + " :\r\n" + el.stderr + "\r\n" + (el.stderr.slice(-1) ==  '\n' ? "" : "\r\n");
             }
-        document.querySelector("#score").textContent = score + "/" + jsonData.length + " tests passés";
         });
-
+        let scoreDiv = document.querySelector("#score");
+        scoreDiv.className = "alert";
+        if(score == 0) {
+            scoreDiv.classList.add("alert-danger");
+            scoreDiv.textContent = "Aucun test passé...";
+        } else if (score == jsonData.length) {
+            scoreDiv.classList.add("alert-success");
+            scoreDiv.textContent = "Tous les tests passés !";
+        } else {
+            scoreDiv.classList.add("alert-warning");
+            scoreDiv.textContent = score + "/" + jsonData.length + " tests passés";
+        }
+        
         
         
         /*

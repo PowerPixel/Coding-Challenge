@@ -124,7 +124,8 @@ class ExerciseSolvingController extends AbstractController
             ]);
             if(isset($solvingEntry)) {
                 $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]["source"]);
-                $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
+                if($userScore > $solvingEntry->getCompletedTestAmount())
+                    $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
             } else {
                 $userRepo = $this->getDoctrine()->getRepository(User::class);
                 $user = $userRepo->find($programData["userId"]);

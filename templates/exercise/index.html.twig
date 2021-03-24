@@ -7,7 +7,7 @@
     <p>{{ exercise.ApprovedDate|date("d/m/Y") }}</p>
     <p>{{ exercise.description }}</p>
     {% if  app.user %}
-        <a href=""><div class="btn btn-primary">Résoudre l'exercice</div></a>
+        <a href="{{ path('exercise_solving',{id:exercise.id}) }}"><div class="btn btn-primary">Résoudre l'exercice</div></a>
     {% else %}
         <a class='newLink' href="{{ path('app_register') }}">Inscrivez-vouz</a> ou <a class='newLink' href="{{ path('app_login') }}">connectez-vous</a> afin de résoudre l'exercice.
     {% endif %}

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coding challenge - Classement global{% endblock %}
+{% block titre_page %}Classement Global{% endblock %}
+{% block body %}
+
+<table class="table-leaderboard">
+    <thead>
+            <th>Rang</th>
+			<th>Pseudonyme</th>
+			<th>Score total</th>
+	</thead>
+    
+    <tbody>
+        <tr>
+        {% for user in users %}
+            <td> #{{loop.index}} </td>
+            <td> {{ user.username }} </td>
+{# Idée nalo_ :
+<td style="width:10%"> #{{loop.index}} </td>
+<td style="width:10%"> {{ user.username }} </td>
+#}
+
+            <td> score </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    
+</table>
+
+{% endblock %}

@@ -5,8 +5,12 @@ namespace App\Entity;
 use App\Repository\SolvingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+
 /**
  * @ORM\Entity(repositoryClass=SolvingRepository::class)
+ * @ApiResource(collectionOperations={"get"},
+ *              itemOperations={"put","get"})
  */
 class Solving
 {
@@ -23,14 +27,14 @@ class Solving
     private $completed_test_amount;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $user_id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Exercise::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity=Exercise::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="exercise", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $exercise_id;
 

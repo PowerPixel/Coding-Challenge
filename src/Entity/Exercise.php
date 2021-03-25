@@ -4,12 +4,16 @@ namespace App\Entity;
 
 use App\Repository\ExerciseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ExerciseRepository::class)
+ * @ApiResource(collectionOperations={"get"},
+ *              itemOperations={"get"})
  */
 class Exercise
 {
+    public static $PATH_TO_EXERCISES_FOLDER = "../exercises";
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -39,7 +43,7 @@ class Exercise
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $creator;
 
@@ -55,7 +59,7 @@ class Exercise
 
     /**
      * @ORM\ManyToOne(targetEntity=ExerciseState::class)
-     * @ORM\JoinColumn(name="exercisestate", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="exercisestate", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $state;
 
@@ -102,7 +106,7 @@ class Exercise
 
     public function getFolderPath(): ?string
     {
-        return $this->folder_path;
+        return Exercise::$PATH_TO_EXERCISES_FOLDER . $this->folder_path;
     }
 
     public function setFolderPath(string $folder_path): self

@@ -1,0 +1,37 @@
+{% extends "admin/admin_base.html.twig" %}
+{% block titre_page %}
+    Gestion des exercices
+{% endblock %}
+{% block content %}
+    <div class="justify-content-md-center w-75">
+		<table class="table">
+			<thead>
+                <th>Nom</th>
+				<th>Créateur</th>
+				<th>Difficulté</th>
+				<th>Description</th>
+				<th>Statut</th>
+				<th>Voir</th>
+			</thead>
+		</tr>
+	</thead>
+	<tbody>
+		{% for exercise in exercises %}
+			<tr>
+				<td>{{ exercise.Name }}</td>
+				<td>{{ exercise.Creator.Username }}</td>
+				<td>{{ exercise.Difficulty }}</td>
+				<td>{{ exercise.Description }}</td>
+				<td>{{ exercise.State.getLabel() }}</td>
+				<td><a href="{{ path("exercise_view",{id:exercise.id})}}"><i class="fas fa-eye"></i></a></td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% if app.request.get("page") != 1 %}
+	<a href="{{ path("exercises", {"page" : app.request.get("page")-1 }) }}"><</a>
+{% endif %}
+{% if not isLastPage %}
+	<a href="{{ path("exercises", {"page" : app.request.get("page")+1 }) }}">></i></a>
+{% endif %}
+{% endblock %}

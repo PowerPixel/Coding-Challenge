@@ -26,13 +26,13 @@ class Composed
 
     /**
      * @ORM\ManyToMany(targetEntity=Exercise::class)
-     * @ORM\JoinColumn(name="exercice", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="exercice", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $exercise_id;
 
     /**
      * @ORM\OneToOne(targetEntity=Challenge::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="challenge", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="challenge", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $challenge_id;
 

@@ -1,0 +1,34 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block content %}
+{% if  users|length == 0 %}
+	<div class="alert alert-success">
+		Aucun utilisateur en attente !
+	</div>
+{% else %}
+	<table class="table">
+		<thead>
+			<th>Nom</th>
+			<th>Prénom</th>
+			<th>Pseudonyme</th>
+			<th>Adresse mail</th>
+			<th></th>
+		</thead>
+<tbody>
+	{% for user in users %}
+		<tr>
+			<td>{{ user.FirstName }}</td>
+			<td>{{ user.LastName}}</td>
+			<td>{{ user.username }}</td>
+			<td>{{ user.email }}</td>
+			<td>
+				<a href="{{ path("user_approved", {id:user.id}) }}">
+					<i class="fas fa-check"></i>
+				</a>
+				<a href="{{ path("user_refused", {id:user.id}) }}">
+					<i class="fas fa-times"></i>
+				</a>
+			</td>
+		</tr>
+	{% endfor %}
+</tbody></table>{% endif %}{% endblock %}

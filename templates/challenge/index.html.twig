@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coding challenge - {{ challenge.id }}{% endblock %}
+
+{% block body %}
+
+    {{ challenge.StartDate|date("d/m/Y") }} - {{ challenge.EndDate|date("d/m/Y")  }}
+{% endblock %}

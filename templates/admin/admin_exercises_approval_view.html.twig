@@ -1,0 +1,26 @@
+{% extends "admin/admin_base.html.twig" %}
+
+{% block content %}
+    
+        <div class="justify-content-md-center w-75">
+		<table class="table">
+			<thead>
+                <th>Nom de l'exercice</th>
+				<th>Soumis par</th>
+				<th>Date</th>
+				<th>Voir</th>
+			</thead>
+		</tr>
+	</thead>
+	<tbody>
+		{% for exercise in exercises %}
+			<tr>
+				<td>{{ exercise.name }}</td>
+				<td>{{ exercise.creator.username }}</td>
+				<td>{{ exercise.submitDate|date("d/m/Y")}}</td>
+				<td><a href="{{ path("individual_exercises_approval", {id:exercise.id}) }}"><i class="fas fa-eye"></i></a></td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

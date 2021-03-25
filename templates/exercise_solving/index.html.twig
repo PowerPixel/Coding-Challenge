@@ -131,14 +131,12 @@
         scoreDiv.className = "alert";
         if(score == 0) {
             scoreDiv.classList.add("alert-danger");
-            scoreDiv.textContent = "Aucun test passé...";
         } else if (score == jsonData.length) {
             scoreDiv.classList.add("alert-success");
-            scoreDiv.textContent = "Tous les tests passés !";
         } else {
             scoreDiv.classList.add("alert-warning");
-            scoreDiv.textContent = score + "/" + jsonData.length + " tests passés";
         }
+        scoreDiv.textContent = score + "/" + jsonData.length + " test(s) passée(s)";
         
         
         

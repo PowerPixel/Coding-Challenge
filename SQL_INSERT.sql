@@ -1,7 +1,7 @@
-INSERT INTO `user` (`id`, `username`, `roles`, `password`, `first_name`, `last_name`, `email`, `join_date`, `api_key`) VALUES
-(1, 'admin', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$wbHGD5OHSCAOKx4Q5EM1wQ$O0wWibAlYbjqT0w2ZFegXFMhVXgpqlIyob7vNXQnGKg', 'Administrateur', 'Administrateur', 'admin@coding-challenge.com', '2021-01-23 00:00:00', '4ca8de8561893f54aadc9cd4bb59b8e7'),
-(3, 'Azekawa', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$c0tmOG1pZHFTSHdHWk81cA$y1GM8EwPpi66fckrcnhQtEXPANvhvPZ+hjW+wKwtvqI', 'Medhy', 'DOHOU', 'medhy.dohou@gmail.com', '2021-01-28 19:27:00', '37166aaec812602bdb6482b81119f6c0'),
-(4, 'nalo_', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$LhNXfKF+9cU9E7vpul/y7A$k3OgnoyPsajM7cA+tlrxbJHuLrEVzW1ODmf9Xo0SQXk', 'Émilie', 'Vey', 'nath.v26@gmail.com', '2021-01-29 14:11:00', '7140517eb65ff21d452eaf6d49553b53');
+INSERT INTO `user` (`id`, `username`, `roles`, `password`, `first_name`, `last_name`, `email`, `join_date`, `api_key`, `total_score`) VALUES
+(1, 'admin', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$wbHGD5OHSCAOKx4Q5EM1wQ$O0wWibAlYbjqT0w2ZFegXFMhVXgpqlIyob7vNXQnGKg', 'Administrateur', 'Administrateur', 'admin@coding-challenge.com', '2021-01-23 00:00:00', '4ca8de8561893f54aadc9cd4bb59b8e7', 0),
+(3, 'Azekawa', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$c0tmOG1pZHFTSHdHWk81cA$y1GM8EwPpi66fckrcnhQtEXPANvhvPZ+hjW+wKwtvqI', 'Medhy', 'DOHOU', 'medhy.dohou@gmail.com', '2021-01-28 19:27:00', '37166aaec812602bdb6482b81119f6c0', 0),
+(4, 'nalo_', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$LhNXfKF+9cU9E7vpul/y7A$k3OgnoyPsajM7cA+tlrxbJHuLrEVzW1ODmf9Xo0SQXk', 'Émilie', 'Vey', 'nath.v26@gmail.com', '2021-01-29 14:11:00', '7140517eb65ff21d452eaf6d49553b53', 0);
 INSERT INTO `challenge` (`id`, `start_date`, `end_date`) VALUES
 (1, '2020-12-01 00:00:00', '2020-12-31 23:59:59'),
 (2, '2021-01-01 00:00:00', '2021-12-31 23:59:59'),

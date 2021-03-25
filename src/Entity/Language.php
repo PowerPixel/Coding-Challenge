@@ -22,6 +22,16 @@ class Language
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $code_snippet;
+
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $name_code;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +45,30 @@ class Language
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCodeSnippet(): ?string
+    {
+        return $this->code_snippet;
+    }
+
+    public function setCodeSnippet(string $code): self
+    {
+        $this->code_snippet = $code;
+
+        return $this;
+    }
+
+    public function getNameCode(): ?string
+    {
+        return $this->name_code;
+    }
+
+    public function setNameCode(string $name_code): self
+    {
+        $this->code_snippet = $name_code;
 
         return $this;
     }

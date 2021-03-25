@@ -36,7 +36,8 @@ class ExerciseSolvingController extends AbstractController
         //$logger->info(var_dump($user));
         if(isset($user)){
             $solvingEntry = $solvingRepo->findOneBy([
-                "user_id" => $user->getId()
+                "user_id" => $user->getId(),
+                "exercise_id" => $id
             ]);
         }
         if(isset($solvingEntry)) {

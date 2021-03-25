@@ -5,6 +5,7 @@
 {% endblock %}
 {% block title %}CodingChallenge - {{ exercise.Name }}{% endblock %}
 {% block titre_page %}
+<a href="{{ path('exercise',{ id: exercise.id}) }}"><i class="fas fa-backward fa-sm"></i></a><br><br>
     {{ exercise.Name }}
 {% endblock %}
 {% block body %}

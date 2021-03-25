@@ -95,14 +95,14 @@ class ExerciseSolvingController extends AbstractController
                     if(rtrim($content) == rtrim($returnedData['tests'][$i]['stdout'])) {
                         $userScore ++;
                         $outputTests[] = [
-                            "name" => "Test " . $i+1,
+                            "name" => "Test " . ($i+1),
                             "check" => TRUE,
                             "stdout" => "✓ Test passé !",
                             "stderr" => $returnedData['tests'][$i]['stderr']
                         ];
                     } else {
                         $outputTests[] = [
-                            "name" => "Test " . $i+1,
+                            "name" => "Test " . ($i+1),
                             "check" => FALSE,
                             "stdout" => "✗ Test échoué : Sortie incorrecte",
                             "stderr" => $returnedData['tests'][$i]['stderr']

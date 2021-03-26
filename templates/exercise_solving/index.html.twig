@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block js %}
     <script src="https://pagecdn.io/lib/ace/1.4.12/ace.js"></script>
+    <script src="{{ asset("js/ext-language_tools.js") }}"></script>
     <script src="{{ asset("js/dynamic-language-loader.js") }}"></script>
 {% endblock %}
 {% block title %}CodingChallenge - {{ exercise.Name }}{% endblock %}
@@ -14,7 +15,7 @@
 </div>
 <hr/>
 <div id="code-edit-area">
-    <select id="languageSelect" onchange="loadLanguage(this);">
+    <select id="languageSelect" onchange="changeLanguage(this);">
             {% for lang in languages %}
                 <option value="[&quot;{{lang.getNameCode()}}&quot;,&quot;{{lang.getName()}}&quot;]">{{ lang.getName() }}</option>
             {% endfor %}
@@ -32,7 +33,7 @@
                 </div>
             </div>
         </div>
-    <div id="editor" style="height 40vh;">{% if lastSubmittedCode is defined %}{{lastSubmittedCode}}{% else %} // Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
+    <div id="editor" style="height 40vh;">{% if lastSubmittedCode != "" %}{{lastSubmittedCode}}{% else %} // Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
 // Appuyez sur entrée pour rajouter des lignes à votre code.{% endif %}</div>
 <br/>
 <a onclick="submitCode()"><div class="btn btn-primary">Soumettre la solution</div></a>
@@ -88,7 +89,7 @@
     editor.setOptions({
     maxLines: 25
     });
-    loadLanguage(document.querySelector("#languageSelect"));
+    changeLanguage(document.querySelector("#languageSelect"));
     function submitCode() {
         let languageSelectNode = document.querySelector("#languageSelect");
 
@@ -153,6 +154,18 @@
                 alert("Une erreur est survenue");
             }
         })*/
+    }
+
+    function changeLanguage(node) {
+        var code = editor.getValue();
+        let ajax = new XMLHttpRequest();
+        ajax.open("POST","{{ path('lang', {'id' : app.request.attributes.get('_route_params')['id']}) }}",false);
+        ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        ajax.send(JSON.parse(node.value)[1]);
+        let codeSnippet = ajax.responseText;
+        editor.setValue(codeSnippet);
+        
+        loadLanguage(node);
     }
 </script>    
 {% endblock %}

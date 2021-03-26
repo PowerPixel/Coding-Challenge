@@ -154,4 +154,20 @@ class ExerciseSolvingController extends AbstractController
         }
         return new JsonResponse("Not Authorized");
     }
+
+    /**
+     * @Route("/lang", name="lang")
+     */
+    public function changeLanguage(Request $request,HttpClientInterface $client){
+        if($request->isXmlHttpRequest()){
+            $lang = $request->getContent();
+
+            $languagesRepo = $this->getDoctrine()->getRepository(Language::class);
+            $language = $languagesRepo->findOneBy(['name' => $lang]);
+            $codeSnippet = $language->getCodeSnippet();
+            
+            return new Response($codeSnippet);
+        }
+        return new JsonResponse("Not Authorized");
+    }
 }

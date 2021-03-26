@@ -33,8 +33,7 @@
                 </div>
             </div>
         </div>
-    <div id="editor" style="height 40vh;">{% if lastSubmittedCode != "" %}{{lastSubmittedCode}}{% else %} // Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
-// Appuyez sur entrée pour rajouter des lignes à votre code.{% endif %}</div>
+    <div id="editor" style="height 40vh;"></div>
 <br/>
 <a onclick="submitCode()"><div class="btn btn-primary">Soumettre la solution</div></a>
         <i id="led2" class="far fa-lightbulb fa-2x" data-toggle="modal" data-target="#exo-help2" style="position:absolute;margin-left:1%;"></i>
@@ -157,13 +156,17 @@
     }
 
     function changeLanguage(node) {
-        var code = editor.getValue();
+        let req = {
+            "lang": JSON.parse(node.value)[1],
+            "userId": userId,
+            "exerciseId": exerciseId,
+        }
         let ajax = new XMLHttpRequest();
         ajax.open("POST","{{ path('lang', {'id' : app.request.attributes.get('_route_params')['id']}) }}",false);
         ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        ajax.send(JSON.parse(node.value)[1]);
-        let codeSnippet = ajax.responseText;
-        editor.setValue(codeSnippet);
+        ajax.send(JSON.stringify(req));
+        let code = ajax.responseText;
+        editor.setValue(code);
         
         loadLanguage(node);
     }

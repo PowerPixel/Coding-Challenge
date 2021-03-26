@@ -166,7 +166,7 @@ class ExerciseSubmissionController extends AbstractController
             ($settingsArray['difficulty'] <= 10))){
                 return Array(4, "settings.json");
             };
-            if((gettype($settingsArray['language']) === "array")){
+            if(!(gettype($settingsArray['language']) === "array")){
                 return Array(5,"settings.json");
             };
 

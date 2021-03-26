@@ -42,12 +42,40 @@ class ExerciseSubmissionController extends AbstractController
             $exerciseName = str_replace(' ','',pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
             $file->move('/tmp',$newFilename);
             $archivePath = '/tmp/'.$newFilename;
-            $isArchiveValid = $this->verifyExerciseArchive($archivePath);
-            if(!$isArchiveValid){
+            $archiveIntegrityArray = $this->verifyExerciseArchive($archivePath);
+            $errorMessage = null;
+            $errorFile = $archiveIntegrityArray[1];
+            switch($archiveIntegrityArray[0]){
+                case 1:
+                    $errorMessage = "Le format de l'archive n'est pas correct (" . $errorFile . ")";
+                    break;
+                case 2:
+                    $errorMessage = "Le format de l'archive n'est pas correct (Dossier : " . $errorFile . ", le format actuel d'archive ne contient pas de dossiers)";
+                    break;
+                case 3:
+                    $errorMessage = "Le format des paramètres n'est pas correct (" . $errorFile . ")";
+                    break;
+                case 4:
+                    $errorMessage = "Difficulté invalide (" . $errorFile . ")";
+                    break;
+                case 5:
+                    $errorMessage = "Pas de tableau pour les langages autorisés (" . $errorFile . ")";
+                    break;
+                case 6:
+                    $errorMessage = "Langage invalide (" . $errorFile . ")";
+                    break;
+                case 7:
+                    $errorMessage = "Timeout invalide (" . $errorFile . ")";
+                    break;
+                case 0:
+                default:
+                    break;
+            }
+            if($errorMessage != null){
                 unlink($archivePath);
                 return $this->render('exercise_submission/index.html.twig',[
                     'form' => $form->createView(),
-                    'error' => 'Le format de l\'archive est incorrect.'
+                    'error' => $errorMessage
                 ]);
             }
             $tempFolderPath = explode('.',$archivePath)[0];
@@ -85,9 +113,9 @@ class ExerciseSubmissionController extends AbstractController
      * This function checks if the archive's is well formed.
      *
      * @param String $pathToArchive The path to the archive to check integrity of.
-     * @return boolean true if the archive is a proper, false otherwise
+     * @return Array An array of an error code, as well as the filename which caused the error (if there's one)
      */
-    public function verifyExerciseArchive(String $pathToArchive): bool
+    public function verifyExerciseArchive(String $pathToArchive): array
     {
         $zip = new ZipArchive;
         $filesNamesRegex = ["/description.txt/", "/inputDescription.txt/", "/outputDescription.txt/",
@@ -96,20 +124,20 @@ class ExerciseSubmissionController extends AbstractController
             for($i = 0; $i < $zip->numFiles; $i++)
             {  
                 $stat = $zip->statIndex($i);
+                $filename = $zip->getNameIndex($i);
                 if($stat["size"] != 0){ // Permet de s'assurer que le fichier n'est pas un dossier.
                     $numberOfMatches = 0;
-                    $filename = $zip->getNameIndex($i);
                     foreach($filesNamesRegex as $regex){
                         $numberOfMatches += preg_match($regex,$filename);
                     }
                     if($numberOfMatches == 0){
-                            return false; // Si le nom de fichier ne corresponds à aucune REGEX, alors ce fichier ne devrait pas être dans l'archive, 
-                                          // et la validité de l'archive est compromise
+                            return Array(1, $filename); // Si le nom de fichier ne corresponds à aucune REGEX, alors ce fichier ne devrait pas être dans l'archive, 
+                                                        // et la validité de l'archive est compromise
                     }
                 }
                 else{
-                    return false; // Si c'est un dossier, rejeter l'archive. (La spécification du format d'archive ne prends
-                                  // aucun dossier.
+                    return Array(2, $filename); // Si c'est un dossier, rejeter l'archive. (La spécification du format d'archive ne prends
+                                                // aucun dossier.
                 }
                 
             } 
@@ -122,23 +150,46 @@ class ExerciseSubmissionController extends AbstractController
      * This function checks the integrity of the settings file inside of the archive.
      *
      * @param String $pathToArchive The path to the archive to check integrity of.
-     * @return boolean true if the settings are proper, false otherwise
+     * @return Array An array of an error code, as well as the filename which caused the error (if there's one)
      */
-    public function checkSettings(String $pathToArchive, String $pathToFolder): bool
+    public function checkSettings(String $pathToArchive, String $pathToFolder): array
     {
         $zip = new ZipArchive;
         if($zip->open($pathToArchive)){
             $zip->extractTo($pathToFolder);
             $rawJsonText = file_get_contents($pathToFolder . "/settings.json");
             $settingsArray = json_decode($rawJsonText,true);
-            $isDifficultyValid = (gettype($settingsArray['difficulty']) === "integer") && ($settingsArray['difficulty'] >= 0) && 
-            ($settingsArray['difficulty'] <= 10);
-            $isLanguageValid = gettype($settingsArray['language']) === "array";
-            
-            $isTimeoutValid = (gettype($settingsArray['timeout']) === "integer") && ($settingsArray['timeout']>=0);
-            return $isDifficultyValid && $isLanguageValid && $isTimeoutValid;
+            if(($rawJsonText === false) || ($settingsArray == null)){
+                return Array(3,"settings.json");
+            }
+            if(!((gettype($settingsArray['difficulty']) === "integer") && ($settingsArray['difficulty'] >= 1) && 
+            ($settingsArray['difficulty'] <= 10))){
+                return Array(4, "settings.json");
+            };
+            if((gettype($settingsArray['language']) === "array")){
+                return Array(5,"settings.json");
+            };
+
+            $languageRepo = $this->getDoctrine()->getRepository(Language::class);
+            foreach ($settingsArray['language'] as $language) {
+                $languageFetched = $languageRepo->findOneBy(
+                    [
+                        "label" => $language,
+                    ]
+                    );
+                if($languageFetched == null){
+                    return Array(6, $language);
+                }
+            }
+            if(!(gettype($settingsArray['timeout']) === "integer") && ($settingsArray['timeout']>=0))
+            {
+                return Array(7,"settings.json");
+            };
         }
-        return true;
+        else{
+            return Array(8,"Fichier zip non valide/corrompu");
+        }
+        return Array(0, null);
     }
     /**
      * This method parse the archive and transforms it into an array containing an exercise and a restricted object.

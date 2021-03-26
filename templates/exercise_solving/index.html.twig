@@ -15,13 +15,9 @@
 <hr/>
 <div id="code-edit-area">
     <select id="languageSelect" onchange="loadLanguage(this);">
-            <option value="[&quot;c_cpp&quot;,&quot;c&quot;]">C</option>
-            <option value="[&quot;c_cpp&quot;,&quot;c++&quot;]">C++</option>
-            <option value="[&quot;csharp&quot;,&quot;c#&quot;]">C#</option>
-            <option value="[&quot;java&quot;,&quot;java&quot;]">Java</option>
-            <option value="[&quot;javascript&quot;,&quot;javascript&quot;]">JavaScript</option>
-            <option value="[&quot;python&quot;,&quot;python&quot;]">Python 3.7</option>
-            <option value="[&quot;rust&quot;,&quot;rust&quot;]">Rust</option>
+            {% for lang in languages %}
+                <option value="[&quot;{{lang.getNameCode()}}&quot;,&quot;{{lang.getName()}}&quot;]">{{ lang.getName() }}</option>
+            {% endfor %}
         </select>
         <i id="led" class="far fa-lightbulb fa-lg" data-toggle="modal" data-target="#exo-help" style="position:absolute;margin-left:1%;"></i>
         <div class="modal" id="exo-help" role="dialog" aria-hidden="true">

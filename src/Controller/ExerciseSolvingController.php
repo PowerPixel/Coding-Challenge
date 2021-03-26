@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Exercise;
 use App\Entity\Solving;
 use App\Entity\User;
+use App\Entity\Language;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,16 +25,17 @@ class ExerciseSolvingController extends AbstractController
      * @Route("/solve", name="exercise_solving")
      * @IsGranted("ROLE_USER")
      */
-    public function index(int $id,LoggerInterface $logger): Response
+    public function index(int $id): Response
     {
         $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
         $exercise = $exercisesRepo->find($id);
         $exerciseFolderPath = $exercise->getFolderPath();
         $description = file_get_contents($exerciseFolderPath . "/description.txt");
         $user = $this->getUser();
+        $languagesRepo = $this->getDoctrine()->getRepository(Language::class);
+        $languages = $languagesRepo->findAll();
         $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
         $lastSubmittedCode = "";
-        //$logger->info(var_dump($user));
         if(isset($user)){
             $solvingEntry = $solvingRepo->findOneBy([
                 "user_id" => $user->getId(),
@@ -46,7 +48,8 @@ class ExerciseSolvingController extends AbstractController
         return $this->render('exercise_solving/index.html.twig', [
             'exercise' => $exercise,
             'description' => $description,
-            'lastSubmittedCode' => $lastSubmittedCode
+            'lastSubmittedCode' => $lastSubmittedCode,
+            'languages' => $languages
         ]);
     }
     /**

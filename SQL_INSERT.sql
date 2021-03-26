@@ -1,7 +1,7 @@
-INSERT INTO `user` (`id`, `username`, `roles`, `password`, `first_name`, `last_name`, `email`, `join_date`, `api_key`) VALUES
-(1, 'admin', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$wbHGD5OHSCAOKx4Q5EM1wQ$O0wWibAlYbjqT0w2ZFegXFMhVXgpqlIyob7vNXQnGKg', 'Administrateur', 'Administrateur', 'admin@coding-challenge.com', '2021-01-23 00:00:00', '4ca8de8561893f54aadc9cd4bb59b8e7'),
-(3, 'Azekawa', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$c0tmOG1pZHFTSHdHWk81cA$y1GM8EwPpi66fckrcnhQtEXPANvhvPZ+hjW+wKwtvqI', 'Medhy', 'DOHOU', 'medhy.dohou@gmail.com', '2021-01-28 19:27:00', '37166aaec812602bdb6482b81119f6c0'),
-(4, 'nalo_', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$LhNXfKF+9cU9E7vpul/y7A$k3OgnoyPsajM7cA+tlrxbJHuLrEVzW1ODmf9Xo0SQXk', 'Émilie', 'Vey', 'nath.v26@gmail.com', '2021-01-29 14:11:00', '7140517eb65ff21d452eaf6d49553b53');
+INSERT INTO `user` (`id`, `username`, `roles`, `password`, `first_name`, `last_name`, `email`, `join_date`, `api_key`, `total_score`) VALUES
+(1, 'admin', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$wbHGD5OHSCAOKx4Q5EM1wQ$O0wWibAlYbjqT0w2ZFegXFMhVXgpqlIyob7vNXQnGKg', 'Administrateur', 'Administrateur', 'admin@coding-challenge.com', '2021-01-23 00:00:00', '4ca8de8561893f54aadc9cd4bb59b8e7', 0),
+(3, 'Azekawa', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$c0tmOG1pZHFTSHdHWk81cA$y1GM8EwPpi66fckrcnhQtEXPANvhvPZ+hjW+wKwtvqI', 'Medhy', 'DOHOU', 'medhy.dohou@gmail.com', '2021-01-28 19:27:00', '37166aaec812602bdb6482b81119f6c0', 0),
+(4, 'nalo_', '[\"ROLE_NEW_USER\"]', '$argon2id$v=19$m=65536,t=4,p=1$LhNXfKF+9cU9E7vpul/y7A$k3OgnoyPsajM7cA+tlrxbJHuLrEVzW1ODmf9Xo0SQXk', 'Émilie', 'Vey', 'nath.v26@gmail.com', '2021-01-29 14:11:00', '7140517eb65ff21d452eaf6d49553b53', 0);
 INSERT INTO `challenge` (`id`, `start_date`, `end_date`) VALUES
 (1, '2020-12-01 00:00:00', '2020-12-31 23:59:59'),
 (2, '2021-01-01 00:00:00', '2021-12-31 23:59:59'),
@@ -44,16 +44,15 @@ INSERT INTO `composed_exercise` (`composed_id`, `exercise_id`) VALUES
 INSERT INTO `constrained` (`id`, `challenge`) VALUES
 (1, 1);
 
-INSERT INTO `language` (`id`, `name`) VALUES
-(1, 'Python'),
-(2, 'Java'),
-(3, 'NodeJS'),
-(4, 'C'),
-(5, 'C++'),
-(6, 'C#'),
-(7, 'PHP'),
-(8, 'F#'),
-(9, 'Rust');
+INSERT INTO `language` (`id`, `name`, `code_snippet`, `name_code`) VALUES
+(1, 'Python', 'import sys\nimport math\n# Pour lire une entrée :\n# inp = input()\n\n# Pour afficher sur stderr :\n# print("message", file=sys.stderr)', 'python'),
+(2, 'Java', 'import java.util.*;\nimport java.io.*;\nimport java.math.*;\n// Pour lire une entrée :\n// Scanner in = new Scanner(System.in);\n// int input = in.nextInt();\n\n// Pour afficher sur stderr :\nSystem.err.println("message");', 'java'),
+(3, 'NodeJS', '// Pour lire une entrée :\n// const inp = readline()\n\n// Pour afficher sur stderr :\n// console.error("message");', 'javascript'),
+(4, 'C', '#include <stdlib.h>\n#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n// Pour lire une entrée :\n// int inp;\n// scanf("%d", &inp);\n\n// Pour afficher sur stderr :\n// fprintf(stderr, "message\n");', 'c_cpp'),
+(5, 'C++', '#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n// Pour lire une entrée :\n// int inp;\n// cin >> inp; cin.ignore();\n\n// Pour afficher sur stderr :\n// cerr << "Debug messages..." << endl;', 'c_cpp'),
+(6, 'C#', 'using System;\nusing System.Linq;\nusing System.IO;\nusing System.Text;\nusing System.Collections;\nusing System.Collections.Generic;\n// Pour lire une entrée :\n// string inp = Console.ReadLine();\n\n// Pour afficher sur stderr :\n// Console.Error.WriteLine("message");', 'csharp'),
+(7, 'PHP', '<?php\n// Pour lire une entrée :\n// fscanf(STDIN, "%s", $inp);\n\n// Pour afficher sur stderr :\n// error_log("message");\n?>', 'php'),
+(9, 'Rust', 'use std::io;\n// Pour lire une entrée :\n// let mut inp = String::new();\n// io::stdin().read_line(&mut inp).unwrap();\n\n// Pour afficher sur stderr :\n// eprintln!("message");', 'rust');
 
 INSERT INTO `constrained_language` (`constrained_id`, `language_id`) VALUES
 (1, 1),

@@ -36,7 +36,8 @@ class ExerciseSolvingController extends AbstractController
         //$logger->info(var_dump($user));
         if(isset($user)){
             $solvingEntry = $solvingRepo->findOneBy([
-                "user_id" => $user->getId()
+                "user_id" => $user->getId(),
+                "exercise_id" => $id
             ]);
         }
         if(isset($solvingEntry)) {
@@ -122,18 +123,24 @@ class ExerciseSolvingController extends AbstractController
                 "user_id" => $programData["userId"],
                 "exercise_id" => $programData["exerciseId"]
             ]);
+            $userRepo = $this->getDoctrine()->getRepository(User::class);
+            $user = $userRepo->find($programData["userId"]);
+
+            $ponderateScore = $userScore * $exercise->getDifficulty();
+
             if(isset($solvingEntry)) {
                 $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]["source"]);
-                if($userScore > $solvingEntry->getCompletedTestAmount())
+                if($userScore > $solvingEntry->getCompletedTestAmount()) {
+                    $user->setTotalScore($user->getTotalScore() + ($ponderateScore - $solvingEntry->getCompletedTestAmount() * $exercise->getDifficulty())); 
                     $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
+                }
             } else {
-                $userRepo = $this->getDoctrine()->getRepository(User::class);
-                $user = $userRepo->find($programData["userId"]);
                 $newSolving = new Solving();
                 $newSolving->setUserId($user);
                 $newSolving->setExerciseId($exercise);
                 $newSolving->setCompletedTestAmount($userScore);
                 $newSolving->setLastSubmittedCode($programData["submittedCode"]["source"]);
+                $user->setTotalScore($user->getTotalScore() + $ponderateScore);
             }
 
             $entityManager = $this->getDoctrine()->getManager();

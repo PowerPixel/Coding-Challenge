@@ -12,10 +12,10 @@
             </thead>
         
             <tbody>
-            {% for user in user_scores %}
+            {% for user, score in user_scores %}
                 <tr>
-                    <td> {{ user['username'] }} </td>
-                    <td> {{ user['score'] }} </td>
+                    <td> {{ user }} </td>
+                    <td> {{ score }} </td>
                 </tr>
             {% endfor %}
             </tbody>

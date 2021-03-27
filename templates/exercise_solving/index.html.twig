@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block js %}
     <script src="https://pagecdn.io/lib/ace/1.4.12/ace.js"></script>
+    <script src="{{ asset("js/ext-language_tools.js") }}"></script>
     <script src="{{ asset("js/dynamic-language-loader.js") }}"></script>
 {% endblock %}
 {% block title %}CodingChallenge - {{ exercise.Name }}{% endblock %}
@@ -14,14 +15,10 @@
 </div>
 <hr/>
 <div id="code-edit-area">
-    <select id="languageSelect" onchange="loadLanguage(this);">
-            <option value="[&quot;c_cpp&quot;,&quot;c&quot;]">C</option>
-            <option value="[&quot;c_cpp&quot;,&quot;c++&quot;]">C++</option>
-            <option value="[&quot;csharp&quot;,&quot;c#&quot;]">C#</option>
-            <option value="[&quot;java&quot;,&quot;java&quot;]">Java</option>
-            <option value="[&quot;javascript&quot;,&quot;javascript&quot;]">JavaScript</option>
-            <option value="[&quot;python&quot;,&quot;python&quot;]">Python 3.7</option>
-            <option value="[&quot;rust&quot;,&quot;rust&quot;]">Rust</option>
+    <select id="languageSelect" onchange="changeLanguage(this);">
+            {% for lang in languages %}
+                <option value="[&quot;{{lang.getNameCode()}}&quot;,&quot;{{lang.getName()}}&quot;]">{{ lang.getName() }}</option>
+            {% endfor %}
         </select>
         <i id="led" class="far fa-lightbulb fa-lg" data-toggle="modal" data-target="#exo-help" style="position:absolute;margin-left:1%;"></i>
         <div class="modal" id="exo-help" role="dialog" aria-hidden="true">
@@ -36,8 +33,7 @@
                 </div>
             </div>
         </div>
-    <div id="editor" style="height 40vh;">{% if lastSubmittedCode is defined %}{{lastSubmittedCode}}{% else %} // Envoyez les messages de debug sur la sortie d'erreur (voir méthode selon langage)
-// Appuyez sur entrée pour rajouter des lignes à votre code.{% endif %}</div>
+    <div id="editor" style="height 40vh;"></div>
 <br/>
 <a onclick="submitCode()"><div class="btn btn-primary">Soumettre la solution</div></a>
         <i id="led2" class="far fa-lightbulb fa-2x" data-toggle="modal" data-target="#exo-help2" style="position:absolute;margin-left:1%;"></i>
@@ -92,7 +88,7 @@
     editor.setOptions({
     maxLines: 25
     });
-    loadLanguage(document.querySelector("#languageSelect"));
+    changeLanguage(document.querySelector("#languageSelect"));
     function submitCode() {
         let languageSelectNode = document.querySelector("#languageSelect");
 
@@ -157,6 +153,22 @@
                 alert("Une erreur est survenue");
             }
         })*/
+    }
+
+    function changeLanguage(node) {
+        let req = {
+            "lang": JSON.parse(node.value)[1],
+            "userId": userId,
+            "exerciseId": exerciseId,
+        }
+        let ajax = new XMLHttpRequest();
+        ajax.open("POST","{{ path('lang', {'id' : app.request.attributes.get('_route_params')['id']}) }}",false);
+        ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        ajax.send(JSON.stringify(req));
+        let code = ajax.responseText;
+        editor.setValue(code);
+        
+        loadLanguage(node);
     }
 </script>    
 {% endblock %}

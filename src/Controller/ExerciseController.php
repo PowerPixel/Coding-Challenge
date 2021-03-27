@@ -21,10 +21,11 @@ class ExerciseController extends AbstractController
         $solves = $this->getDoctrine()->getRepository(Solving::class)->findBy(["exercise_id" => $id]);
         $users = array();
         foreach ($solves as $solve) {
-            $users[] = [
-                "username" => $user_repo->findOneById($solve->getUserId())->getUsername(),
-                "score" => $solve->getCompletedTestAmount()
-            ];
+            $username = $user_repo->findOneById($solve->getUserId())->getUsername();
+            $score = $solve->getCompletedTestAmount();
+            if(!isset($users[$username]) || (isset($users[$username]) && $score > $users[$username])) {
+                $users[$username] = $score;
+            }
         }
         return $this->render('exercise/index.html.twig', [
             "exercise" => $exercise,

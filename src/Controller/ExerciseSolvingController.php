@@ -137,7 +137,7 @@ class ExerciseSolvingController extends AbstractController
             // Saving new score in total user's score
             $ponderateScore = $userScore * $exercise->getDifficulty();
 
-            $bestSolve = $solvingRepo->findBestCompleteTestAmount();
+            $bestSolve = $solvingRepo->findBestCompleteTestAmountBy($user->getId(), $exercise->getId());
             if($bestSolve) {
                 if($userScore > $bestSolve->getCompletedTestAmount()) {
                     $user->setTotalScore($user->getTotalScore() + ($ponderateScore - $solvingEntry->getCompletedTestAmount() * $exercise->getDifficulty())); 

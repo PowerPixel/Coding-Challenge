@@ -5,16 +5,19 @@ namespace App\Controller;
 use App\Entity\User;
 
 use App\Entity\Exercise;
+use Psr\Log\LoggerInterface;
+use App\Entity\ExerciseState;
 use App\Form\AdminRegistrationFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Entity\ExerciseState;
+
 
 /**
  * @Route("/admin")
@@ -70,7 +73,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Controls the route to the bulk registration panel.
+     * Controls the route to the registration panel.
      * @Route("/user_registration",name="admin_user_registration")
      */
     public function userRegistrationPanel(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
@@ -121,7 +124,7 @@ class AdminController extends AbstractController
             $searchTerm = $form->getData();
         }
         $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
-        $exercises = $exercisesRepo->findExercisesByPageWithSearchCriteria($page, 10, $searchTerm['searchTerm']);
+        $exercises = $exercisesRepo->findExercisesByPageWithSearchCriteria($page, 10);
         $isLastPage = ($page === intval($exercises['numberOfPages']));
         return $this->render('admin/exercises_manager_panel.html.twig', [
             'exercises' => $exercises['results'],
@@ -174,6 +177,99 @@ class AdminController extends AbstractController
         [
             'users' => $users['results'],
             'isLastPage' => $isLastPage
+        ]);
+    }
+    /**
+     * @Route("/user_bulk_registeration",name="admin_user_bulk_registration")
+     */
+    public function userBulkRegistration(Request $req, UserPasswordEncoderInterface $passwordEncoder, LoggerInterface $logger): Response
+    {
+        $CSVFormBuilder = $this->createFormBuilder();
+        $form = $CSVFormBuilder->add("fichier",FileType::class, [
+            "attr" => ["accept" => "text/csv"],
+            "label" => "Fichier CSV à uploader"
+        ])
+                        ->add("Soumettre", SubmitType::class)
+                        ->getForm();
+        $form->handleRequest($req);
+        if($form->isSubmitted() && $form->isValid()){
+            $file = $form->getData()["fichier"];
+            $file->move('/tmp','CSV-Users');
+            $contenu = file_get_contents('/tmp/CSV-Users');
+            $lignes = preg_split('/\r\n|\n|\r/', $contenu);
+            $userRepo = $this->getDoctrine()->getRepository(User::class);
+            $usernameDejaPris = [];
+            $emailDejaPris = [];
+            $nbUsersAjoutes = 0;
+            foreach ($lignes as $ligne) {
+                $contenu = explode(';', $ligne);
+                if(count($contenu) != 1) {
+                    $nom = $contenu[0];
+                    $prenom = $contenu[1];
+                    $mail = $contenu[2];
+                    $username = $contenu[3];
+                    $userInDbOrNot = $userRepo->findOneBy([ // Vérifie si il existe un utilisateur avec le même mail en bd , pas trouvé de meilleur nom pour la var
+                        'username' => $username,
+                    ]);
+                    if($userInDbOrNot != null)
+                    {
+                        $usernameDejaPris[] = $username;
+                    }
+                    else
+                    {
+                        $emailExiste = $userRepo->findOneBy([ // Vérifie si il existe un utilisateur avec le même mail en bd , pas trouvé de meilleur nom pour la var
+                            'email' => $mail,
+                        ]);
+                        if($emailExiste != null){
+                            $emailDejaPris[] = $mail;
+                        }
+                        else{
+                            $nouvelUser = new User();
+                            $nouvelUser->setUsername($username);
+                            $nouvelUser->setFirstName($prenom);
+                            $nouvelUser->setLastName($nom);
+                            $nouvelUser->setEmail($mail);
+                            $nouvelUser->setJoinDate(new \DateTime());
+                            $nouvelUser->setPassword(
+                                $passwordEncoder->encodePassword(
+                                    $nouvelUser,
+                                    $username
+                                )
+                            );
+                            $this->getDoctrine()->getManager()->persist($nouvelUser);
+                            $this->getDoctrine()->getManager()->flush();
+                            $nbUsersAjoutes++;
+                        }
+                    }
+                }
+            }
+            if(count($usernameDejaPris) != 0){
+                $string = "Les noms d'utilisateur suivants sont déjà pris : ";
+                $tailleArray = count($usernameDejaPris);
+                foreach ($usernameDejaPris as $index => $usernameAAjouter){
+                    $string .= $usernameAAjouter;
+                    if($index != ($tailleArray - 1)){
+                        $string .= ",";
+                    }
+                };
+                $this->addFlash('error', $string);
+            }
+            if(count($emailDejaPris) != 0){
+                $string = "Les emails suivants sont déjà pris : ";
+                $tailleArray = count($emailDejaPris);
+                foreach ($emailDejaPris as $index => $emailAAjouter){
+                    $string .= $emailAAjouter;
+                    if($index != ($tailleArray - 1)){
+                        $string .= ",";
+                    }
+                };
+                $this->addFlash('error', $string);
+            }
+            $this->addFlash('success', $nbUsersAjoutes . ' utilisateurs inscrits avec succés !');
+        }
+        return $this->render("admin/admin_users_bulk_registration.html.twig",
+        [
+            'form' => $form->createView(),
         ]);
     }
 

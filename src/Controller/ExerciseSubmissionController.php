@@ -214,7 +214,7 @@ class ExerciseSubmissionController extends AbstractController
         $exercise->setCreator($creator);
         $exercise->setDescription(file_get_contents($pathToTempFolder . '/description.txt'));
         $exercise->setDifficulty($settingsArray["difficulty"]);
-        $exercise->setFolderPath(Exercise::$PATH_TO_EXERCISES_FOLDER . "/" . $exerciseName);
+        $exercise->setFolderPath("/" . $exerciseName);
         $exercise->setState($exerciseState);
         $exercise->setName($exerciseName);
         $exercise->setSubmitDate(new \DateTime());

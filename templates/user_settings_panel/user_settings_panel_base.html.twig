@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}Paramètres utilisateur{% endblock %}
+{% block titre_page %}
+{% endblock %}
+{% block body %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-3 w-25">
+				<nav class="nav flex-column">
+					<a class="p-1 nav-link" href="{{ path('user_settings_panel_password') }}">Changer de mot de passe</a>
+				</nav>
+			</div>
+			<div class="justify-content-md-center w-75">
+				 {% block content %}{% endblock %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -16,6 +16,7 @@ class ChangePasswordFormType extends AbstractType
     {
         $builder
             ->add('oldPassword', PasswordType::class, array(
+                'label' => "Mot de passe actuel",
                 'mapped' => false
             ))
             ->add('plainPassword', RepeatedType::class, array(
@@ -23,11 +24,14 @@ class ChangePasswordFormType extends AbstractType
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent être identiques',
                 'options' => array(
+                    'label' => "Nouveau mot de passe",
                     'attr' => array(
                         'class' => 'password-field'
                     )
                 ),
                 'required' => true,
+                'first_options'  => ['label' => 'Nouveau mot de passe'],
+                'second_options' => ['label' => 'Confirmation nouveau mot de passe'],
             ))
             ->add('submit', SubmitType::class, array());
     }

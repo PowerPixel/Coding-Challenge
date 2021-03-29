@@ -122,15 +122,11 @@ class ExerciseSolvingController extends AbstractController
 
             if(isset($solvingEntry)) {
                 $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]["source"]);
-                if($userScore >= $solvingEntry->getCompletedTestAmount()) {
-                    $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
-                }
             } else {
                 $newSolving = new Solving();
                 $newSolving->setUserId($user);
                 $newSolving->setExerciseId($exercise);
                 $newSolving->setLanguageId($language);
-                $newSolving->setCompletedTestAmount($userScore);
                 $newSolving->setLastSubmittedCode($programData["submittedCode"]["source"]);
             }
 
@@ -141,11 +137,12 @@ class ExerciseSolvingController extends AbstractController
             if($bestSolve) {
                 if($userScore > $bestSolve->getCompletedTestAmount()) {
                     $user->setTotalScore($user->getTotalScore() + ($ponderateScore - $solvingEntry->getCompletedTestAmount() * $exercise->getDifficulty())); 
-                    $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
                 }
             } else {
                 $user->setTotalScore($user->getTotalScore() + $ponderateScore);
             }
+
+            $newSolving = $newSolving->setCompletedTestAmount($userScore);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($newSolving);

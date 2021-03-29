@@ -31,6 +31,7 @@ class ExerciseController extends AbstractController
                 $users[$username] = $score;
             }
         }
+        asort($users);
         return $this->render('exercise/index.html.twig', [
             "exercise" => $exercise,
             "user_scores" => $users,

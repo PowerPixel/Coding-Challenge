@@ -10,7 +10,10 @@ use App\Form\AdminRegistrationFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -182,7 +185,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/user_bulk_registeration",name="admin_user_bulk_registration")
      */
-    public function userBulkRegistration(Request $req, UserPasswordEncoderInterface $passwordEncoder, LoggerInterface $logger): Response
+    public function userBulkRegistration(Request $req, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $CSVFormBuilder = $this->createFormBuilder();
         $form = $CSVFormBuilder->add("fichier",FileType::class, [

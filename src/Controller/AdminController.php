@@ -243,6 +243,7 @@ class AdminController extends AbstractController
         $exercise->setState($state);
 
         $this->getDoctrine()->getManager()->flush();
+        $this->addFlash('success', "Exercice " . $exercise->getName() . " approuvé !");
         return $this->redirectToRoute("exercises_approval");
     }
 
@@ -268,7 +269,7 @@ class AdminController extends AbstractController
             $exerciseCreator = $exercise->getCreator();
             $reason = $form->get('remarks')->getData();
             $notification = (new Notification('Refus de votre exercice '. $exerciseName, ['email']))
-            ->content("Votre exercice " . $exerciseName . "a été refusé. \n Raison : \n" . $reason);
+            ->content("Votre exercice " . $exerciseName . " a été refusé. \n Raison : \n" . $reason);
             $recipient = new Recipient($exerciseCreator->getEmail());
             $notifier->send($notification,$recipient);
             $exerciseFolderName = str_replace(' ', '',$exerciseName);;
@@ -280,7 +281,7 @@ class AdminController extends AbstractController
             rmdir($exerciseFolderPath);
             $entityManager->remove($exercise);
             $entityManager->flush();
-
+            $this->addFlash('success', "Exercice " . $exercise->getName() . " refusé !");
             return $this->redirectToRoute("exercises_approval");
         }
         return $this->render(

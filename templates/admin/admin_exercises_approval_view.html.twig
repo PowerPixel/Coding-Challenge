@@ -1,5 +1,7 @@
 {% extends "admin/admin_base.html.twig" %}
-
+{% block titre_page %}
+    Exercices en attente
+{% endblock %}
 {% block content %}
     {% for message in app.flashes('success') %}
 		<div class="alert alert-success">

@@ -1,5 +1,7 @@
 {% extends 'admin/admin_base.html.twig' %}
-
+{% block titre_page %}
+    Utilisateurs en attente
+{% endblock %}
 {% block content %}
 {% if  users|length == 0 %}
 	<div class="alert alert-success">

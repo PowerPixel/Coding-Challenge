@@ -17,9 +17,13 @@ class ExerciseController extends AbstractController
     public function index(int $id): Response
     {
         $user_repo = $this->getDoctrine()->getRepository(User::class);
-        $exercise = $this->getDoctrine()->getRepository(Exercise::class)->find($id);
+        $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
+        $exercise = $exercisesRepo->find($id);
         $solves = $this->getDoctrine()->getRepository(Solving::class)->findBy(["exercise_id" => $id]);
         $users = array();
+        $pathToExercise = $exercise->getFolderPath();
+        $inputFiles = glob($pathToExercise . '/input[0-9]*.txt');
+        $testsCount = count($inputFiles);
         foreach ($solves as $solve) {
             $username = $user_repo->findOneById($solve->getUserId())->getUsername();
             $score = $solve->getCompletedTestAmount();
@@ -29,7 +33,8 @@ class ExerciseController extends AbstractController
         }
         return $this->render('exercise/index.html.twig', [
             "exercise" => $exercise,
-            "user_scores" => $users
+            "user_scores" => $users,
+            "testsCount" => $testsCount
         ]);
     }
 }

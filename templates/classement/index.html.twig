@@ -16,12 +16,7 @@
         {% for user in users %}
             <td> #{{loop.index}} </td>
             <td> {{ user.username }} </td>
-{# Idée nalo_ :
-<td style="width:10%"> #{{loop.index}} </td>
-<td style="width:10%"> {{ user.username }} </td>
-#}
-
-            <td> score </td>
+            <td> {{ user.total_score }} </td>
         </tr>
         {% endfor %}
     </tbody>

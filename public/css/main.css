@@ -148,3 +148,6 @@ p.erreur {
 .table-leaderboard tr td {
   text-align: center;
 }
+
+.table-leaderboard tr:hover {background-color: #434050;
+}

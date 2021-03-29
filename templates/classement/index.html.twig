@@ -15,8 +15,8 @@
         <tr>
         {% for user in users %}
             <td> #{{loop.index}} </td>
-            <td> {{ user.username }} </td>
-            <td> {{ user.total_score }} </td>
+            <td> {{ user.getUsername() }} </td>
+            <td> {{ user.getTotalScore() }} </td>
         </tr>
         {% endfor %}
     </tbody>

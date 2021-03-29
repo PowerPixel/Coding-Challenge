@@ -15,7 +15,7 @@
             {% for user in user_scores %}
                 <tr>
                     <td> {{ user['username'] }} </td>
-                    <td> {{ user['score'] }} </td>
+                    <td style="text-align:center"> {{ user['score']* exercise.difficulty }} / {{testsCount * exercise.difficulty}} </td>
                 </tr>
             {% endfor %}
             </tbody>

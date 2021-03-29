@@ -39,7 +39,7 @@ class Solving
     private $exercise_id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Language::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Language::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false,onDelete="CASCADE")
      */
     private $language_id;

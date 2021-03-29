@@ -13,7 +13,7 @@ class LeaderboardController extends AbstractController
      */
     public function index(): Response
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $users = $this->getDoctrine()->getRepository(User::class)->findAllOrderedByScore();
         return $this->render('classement/index.html.twig', [
          "users" => $users
         ]);

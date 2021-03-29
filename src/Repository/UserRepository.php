@@ -22,6 +22,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    public function findAllOrderedByScore() {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.total_score', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */

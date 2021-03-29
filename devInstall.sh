@@ -13,7 +13,7 @@ function composerSetup(){
 
 function installDatabase(){
     php bin/console doctrine:schema:update -f;
-    mysql $1 -u $2 < SQL_INSERT.sql;
+    mysql -D $1 -u $2 -p < SQL_INSERT.sql;
 }
 
 echo "WARNING ! Before using this script, you must have installed VirtualBox, as well as composer.

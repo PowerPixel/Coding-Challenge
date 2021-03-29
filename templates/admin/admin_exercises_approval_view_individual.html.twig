@@ -44,6 +44,7 @@
 				<span class="sr-only">Suivant</span>
 			</a>
 		</div>
+		<br>
 		<a href="{{ path("exercises_approval_validate", {id: exercise.id}) }}"><button type="button" class="btn btn-success">Approuver l'exercice</button></a>
 		<a href="{{ path("exercises_approval_denied", {id: exercise.id}) }}"><button type="button" class="btn btn-danger">Refuser l'exercice</button></a>
 {% endblock %}

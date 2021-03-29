@@ -25,10 +25,11 @@ class ExerciseController extends AbstractController
         $inputFiles = glob($pathToExercise . '/input[0-9]*.txt');
         $testsCount = count($inputFiles);
         foreach ($solves as $solve) {
-            $users[] = [
-                "username" => $user_repo->findOneById($solve->getUserId())->getUsername(),
-                "score" => $solve->getCompletedTestAmount()
-            ];
+            $username = $user_repo->findOneById($solve->getUserId())->getUsername();
+            $score = $solve->getCompletedTestAmount();
+            if(!isset($users[$username]) || (isset($users[$username]) && $score > $users[$username])) {
+                $users[$username] = $score;
+            }
         }
         return $this->render('exercise/index.html.twig', [
             "exercise" => $exercise,

@@ -19,6 +19,20 @@ class SolvingRepository extends ServiceEntityRepository
         parent::__construct($registry, Solving::class);
     }
 
+    public function findBestCompleteTestAmountBy($user, $exercise) {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.user_id = :user')
+            ->andWhere('s.exercise_id = :exercise')
+            ->setParameter('user', $user)
+            ->setParameter('exercise', $exercise)
+            ->orderBy('s.completed_test_amount', 'DESC')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+        
+    }
+    
+
     // /**
     //  * @return Solving[] Returns an array of Solving objects
     //  */

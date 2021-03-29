@@ -1,6 +1,6 @@
 {% extends "admin/admin_base.html.twig" %}
 {% block titre_page %}
-    Gestion des exercices
+    Gestion des utilisateurs
 {% endblock %}
 {% block content %}
     <div class="justify-content-md-center w-75">
@@ -10,19 +10,22 @@
 				<th>Nom</th>
 				<th>Prénom</th>
 				<th>E-mail</th>
-				<th>Modifier</th>
+				<th>Gestion</th>
 			</thead>
 		</tr>
 	</thead>
 	<tbody>
 		{% for user in users %}
-			<tr>
-				<td>{{ user.getUsername() }}</td>
-				<td>{{ user.getLastName() }}</td>
-				<td>{{ user.getFirstName() }}</td>
-				<td>{{ user.getEmail() }}</td>
-				<td><a href="#"><i class="fas fa-pen"></i></a></td>
-			</tr>
+			{% if user.getRoles()[0] != "ROLE_NEW_USER" %}
+				<tr>
+					<td>{{ user.getUsername() }}</td>
+					<td>{{ user.getLastName() }}</td>
+					<td>{{ user.getFirstName() }}</td>
+					<td>{{ user.getEmail() }}</td>
+					<td><a href="#"><i class="fas fa-pen"></i></a>
+					<a href="#"> <i class="fas fa-user-times"></i></a></td>
+				</tr>
+			{% endif %}
 		{% endfor %}
 	</tbody>
 </table>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Exercise;
 use App\Entity\Solving;
 use App\Entity\User;
+use App\Entity\Language;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,28 +25,18 @@ class ExerciseSolvingController extends AbstractController
      * @Route("/solve", name="exercise_solving")
      * @IsGranted("ROLE_USER")
      */
-    public function index(int $id,LoggerInterface $logger): Response
+    public function index(int $id): Response
     {
         $exercisesRepo = $this->getDoctrine()->getRepository(Exercise::class);
         $exercise = $exercisesRepo->find($id);
         $exerciseFolderPath = $exercise->getFolderPath();
         $description = file_get_contents($exerciseFolderPath . "/description.txt");
-        $user = $this->getUser();
-        $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
-        $lastSubmittedCode = "";
-        //$logger->info(var_dump($user));
-        if(isset($user)){
-            $solvingEntry = $solvingRepo->findOneBy([
-                "user_id" => $user->getId()
-            ]);
-        }
-        if(isset($solvingEntry)) {
-            $lastSubmittedCode = $solvingEntry->getLastSubmittedCode();
-        }
+        $languagesRepo = $this->getDoctrine()->getRepository(Language::class);
+        $languages = $languagesRepo->findAll();
         return $this->render('exercise_solving/index.html.twig', [
             'exercise' => $exercise,
             'description' => $description,
-            'lastSubmittedCode' => $lastSubmittedCode
+            'languages' => $languages
         ]);
     }
     /**
@@ -94,14 +85,14 @@ class ExerciseSolvingController extends AbstractController
                     if(rtrim($content) == rtrim($returnedData['tests'][$i]['stdout'])) {
                         $userScore ++;
                         $outputTests[] = [
-                            "name" => "Test " . $i+1,
+                            "name" => "Test " . ($i+1),
                             "check" => TRUE,
                             "stdout" => "✓ Test passé !",
                             "stderr" => $returnedData['tests'][$i]['stderr']
                         ];
                     } else {
                         $outputTests[] = [
-                            "name" => "Test " . $i+1,
+                            "name" => "Test " . ($i+1),
                             "check" => FALSE,
                             "stdout" => "✗ Test échoué : Sortie incorrecte",
                             "stderr" => $returnedData['tests'][$i]['stderr']
@@ -117,30 +108,80 @@ class ExerciseSolvingController extends AbstractController
             }
 
             // Saving user solution on database
+            $languagesRepo = $this->getDoctrine()->getRepository(Language::class);
+            $language = $languagesRepo->findOneBy(["name" => $programData["submittedCode"]["lang"]]);
             $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
             $solvingEntry = $solvingRepo->findOneBy([
                 "user_id" => $programData["userId"],
-                "exercise_id" => $programData["exerciseId"]
+                "exercise_id" => $programData["exerciseId"],
+                "language_id" => $language->getId()
             ]);
+
+            $userRepo = $this->getDoctrine()->getRepository(User::class);
+            $user = $userRepo->find($programData["userId"]);
+
             if(isset($solvingEntry)) {
                 $newSolving = $solvingEntry->setLastSubmittedCode($programData["submittedCode"]["source"]);
-                if($userScore > $solvingEntry->getCompletedTestAmount())
+                if($userScore >= $solvingEntry->getCompletedTestAmount()) {
                     $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
+                }
             } else {
-                $userRepo = $this->getDoctrine()->getRepository(User::class);
-                $user = $userRepo->find($programData["userId"]);
                 $newSolving = new Solving();
                 $newSolving->setUserId($user);
                 $newSolving->setExerciseId($exercise);
+                $newSolving->setLanguageId($language);
                 $newSolving->setCompletedTestAmount($userScore);
                 $newSolving->setLastSubmittedCode($programData["submittedCode"]["source"]);
             }
 
+            // Saving new score in total user's score
+            $ponderateScore = $userScore * $exercise->getDifficulty();
+
+            $bestSolve = $solvingRepo->findBestCompleteTestAmountBy($user->getId(), $exercise->getId());
+            if($bestSolve) {
+                if($userScore > $bestSolve->getCompletedTestAmount()) {
+                    $user->setTotalScore($user->getTotalScore() + ($ponderateScore - $solvingEntry->getCompletedTestAmount() * $exercise->getDifficulty())); 
+                    $newSolving = $solvingEntry->setCompletedTestAmount($userScore);
+                }
+            } else {
+                $user->setTotalScore($user->getTotalScore() + $ponderateScore);
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($newSolving);
+            $entityManager->persist($user);
             $entityManager->flush();
             
             return new Response(json_encode($outputTests));
+        }
+        return new JsonResponse("Not Authorized");
+    }
+
+    /**
+     * @Route("/lang", name="lang")
+     */
+    public function changeLanguage(Request $request,HttpClientInterface $client){
+        if($request->isXmlHttpRequest()){
+            $data = json_decode($request->getContent(), true);
+
+            $languagesRepo = $this->getDoctrine()->getRepository(Language::class);
+            $language = $languagesRepo->findOneBy(['name' => $data["lang"]]);
+            
+            $solvingRepo = $this->getDoctrine()->getRepository(Solving::class);
+            $solvingEntry = $solvingRepo->findOneBy([
+                "user_id" => $data["userId"],
+                "exercise_id" => $data["exerciseId"],
+                "language_id" => $language->getId()
+            ]);
+
+            $code = "";
+            if(isset($solvingEntry)) {
+                $code = $solvingEntry->getLastSubmittedCode();
+            } else {
+                $code = $language->getCodeSnippet();
+            }
+            
+            return new Response($code);
         }
         return new JsonResponse("Not Authorized");
     }

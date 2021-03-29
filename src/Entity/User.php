@@ -63,6 +63,11 @@ class User implements UserInterface
      */
     private $api_key;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $total_score = 0;
+
     public function __construct()
     {
         // your own logic
@@ -199,6 +204,18 @@ class User implements UserInterface
     public function setApiKey(string $api_key): self
     {
         $this->api_key = $api_key;
+
+        return $this;
+    }
+
+    public function getTotalScore(): ?int
+    {
+        return $this->total_score;
+    }
+
+    public function setTotalScore(int $score): self
+    {
+        $this->total_score = $score;
 
         return $this;
     }

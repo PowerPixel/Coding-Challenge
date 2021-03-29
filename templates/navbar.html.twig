@@ -4,8 +4,8 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 			<div class="navbar-nav">
-				<a class="nav-item nav-link" href="#">Exercices</a>
-				<a class="nav-item nav-link" href="#">Challenge</a>
+				<a class="nav-item nav-link" href="{{ path('allExercises') }}">Exercices</a>
+				<a class="nav-item nav-link" href="{{ path('allChallenge') }}">Challenge</a>
 				<a class="nav-item nav-link" href="{{ path('leaderboard') }}">Classement</a>
 				<a class="nav-item nav-link" href="{{ path('submit_exercise') }}">Soumettre un exercice</a>
         {% if is_granted('ROLE_ADMIN') %}
@@ -14,9 +14,11 @@
 			</div>
 		</div>
     <div class ="align-right">{{ app.user.username }}</div>
-    <a href="{{ path('app_logout') }}">&nbsp;<i class="fas fa-sign-out-alt align-right "></i></a>
+	&nbsp;<a href="{{ path('user_settings_panel') }}"><i class="fas fa-cog"></i></a>
+    &nbsp;<a href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt align-right "></i></a>
 		{% else %}
-    <a class="nav-item nav-link" href="{{ path('app_login') }}">Connexion</a>
+		<a class="nav-item nav-link" href="{{ path('allExercises') }}">Exercices</a>
+    	<a class="nav-item nav-link" href="{{ path('app_login') }}">Connexion</a>
 		<a class="nav-item nav-link" href="{{ path('app_register') }}">Inscription</a>
 	{% endif %}
 </nav>

@@ -5,16 +5,21 @@ namespace App\Controller;
 use App\Entity\User;
 
 use App\Entity\Exercise;
+use App\Entity\ExerciseState;
 use App\Form\AdminRegistrationFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
+use Symfony\Component\DomCrawler\Field\TextareaFormField;
+use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Entity\ExerciseState;
 
 /**
  * @Route("/admin")
@@ -238,29 +243,51 @@ class AdminController extends AbstractController
         $exercise->setState($state);
 
         $this->getDoctrine()->getManager()->flush();
+        $this->addFlash('success', "Exercice " . $exercise->getName() . " approuvé !");
         return $this->redirectToRoute("exercises_approval");
     }
 
     /**
      * @Route("/exercises_approval/{id}/denied", name="exercises_approval_denied")
      */
-    public function exercisesApprovalDenial(int $id): Response
+    public function exercisesApprovalDenial(Request $req, int $id, NotifierInterface $notifier): Response
     {
+        $formBuilder = $this->createFormBuilder();
+        $form = $formBuilder->add('remarks',TextareaType::class,[
+            'label' => "Raison du refus"
+        ])
+        ->add("submit",SubmitType::class,[
+            'label' => 'Refuser et notifier'
+        ])
+        ->getForm();
         $entityManager = $this->getDoctrine()->getManager();
         $exerciseRepo = $this->getDoctrine()->getRepository(Exercise::class);
-        $exercise = $exerciseRepo->find($id);
-
-        $exerciseFolderName = str_replace(' ', '',$exercise->getName());;
-        $exerciseFolderPath = Exercise::$PATH_TO_EXERCISES_FOLDER . '/' . $exerciseFolderName;
-
-        $files = array_diff(scandir($exerciseFolderPath),Array('.','..'));
-        foreach($files as $file){
-            unlink($exerciseFolderPath . '/' . $file);
+        $form->handleRequest($req);
+        if($form->isSubmitted() && $form->isValid()){
+            $exercise = $exerciseRepo->find($id);
+            $exerciseName = $exercise->getName();
+            $exerciseCreator = $exercise->getCreator();
+            $reason = $form->get('remarks')->getData();
+            $notification = (new Notification('Refus de votre exercice '. $exerciseName, ['email']))
+            ->content("Votre exercice " . $exerciseName . " a été refusé. \n Raison : \n" . $reason);
+            $recipient = new Recipient($exerciseCreator->getEmail());
+            $notifier->send($notification,$recipient);
+            $exerciseFolderName = str_replace(' ', '',$exerciseName);;
+            $exerciseFolderPath = Exercise::$PATH_TO_EXERCISES_FOLDER . '/' . $exerciseFolderName;
+            $files = array_diff(scandir($exerciseFolderPath),Array('.','..'));
+            foreach($files as $file){
+                unlink($exerciseFolderPath . '/' . $file);
+            }
+            rmdir($exerciseFolderPath);
+            $entityManager->remove($exercise);
+            $entityManager->flush();
+            $this->addFlash('success', "Exercice " . $exercise->getName() . " refusé !");
+            return $this->redirectToRoute("exercises_approval");
         }
-        rmdir($exerciseFolderPath);
-
-        $entityManager->remove($exercise);
-        $entityManager->flush();
-        return $this->redirectToRoute("exercises_approval");
+        return $this->render(
+            'admin/admin_exercise_denial_form.html.twig',[
+                'form' => $form->createView(),
+            ]
+        );
     }
 }

@@ -39,6 +39,12 @@ class Solving
     private $exercise_id;
 
     /**
+     * @ORM\OneToOne(targetEntity=Language::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false,onDelete="CASCADE")
+     */
+    private $language_id;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $last_submitted_code;
@@ -80,6 +86,18 @@ class Solving
     public function setExerciseId(Exercise $exercise_id): self
     {
         $this->exercise_id = $exercise_id;
+
+        return $this;
+    }
+
+    public function getLanguageId(): ?Language
+    {
+        return $this->language_id;
+    }
+
+    public function setLanguageId(Language $language_id): self
+    {
+        $this->language_id = $language_id;
 
         return $this;
     }

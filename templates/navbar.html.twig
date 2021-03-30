@@ -7,6 +7,7 @@
 				<a class="nav-item nav-link" href="{{ path('allExercises') }}">Exercices</a>
 				<a class="nav-item nav-link" href="{{ path('leaderboard') }}">Classement</a>
 				<a class="nav-item nav-link" href="{{ path('submit_exercise') }}">Soumettre un exercice</a>
+				<a class="nav-item nav-link" href="{{ path('About') }}">&Agrave; propos</a>
         {% if is_granted('ROLE_ADMIN') %}
           <a class="nav-item nav-link" href="{{ path('admin') }}">Panneau d'administration</a>
         {% endif %}

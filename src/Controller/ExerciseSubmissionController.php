@@ -174,7 +174,7 @@ class ExerciseSubmissionController extends AbstractController
             foreach ($settingsArray['language'] as $language) {
                 $languageFetched = $languageRepo->findOneBy(
                     [
-                        "label" => $language,
+                        "name" => $language,
                     ]
                     );
                 if($languageFetched == null){

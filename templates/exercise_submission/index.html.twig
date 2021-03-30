@@ -1,7 +1,9 @@
 {% extends "base.html.twig" %}
 
 {% block title %}Coding Challenge - Soumission d'exercice{% endblock %}
-{% block titre_page %}Soumettre un exercice{% endblock %}
+{% block titre_page %}Soumettre un exercice
+<i id="led" class="far fa-lightbulb fa-mg" style="white-space:nowrap;"></i><i id="led2" class="far fa-lightbulb fa-mg" style="white-space:nowrap;display:none;"></i>
+{% endblock %}
 
 {% block body %}
 {% if error is defined %}
@@ -16,4 +18,51 @@
 {% endif %}
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {{ form(form) }}
+
+<div id="show" style="display:none;">
+<h4 style="text-align:center;">Structure de l&rsquo;archive</h4>
+<br>
+<p> L&rsquo;archive qui sera t&eacute;l&eacute;vers&eacute;e sur le site devra &ecirc;tre sous le format suivant :</p>
+
+<p>ExerciseName.zip <br> &#9500;&#9472;&#9472; description.txt <br> &#9500;&#9472;&#9472; inputDescription.txt <br> &#9500;&#9472;&#9472; outputDescription.txt <br> &#9500;&#9472;&#9472; input1.txt . . . <br> &#9500;&#9472;&#9472; inputX.txt <br> &#9500;&#9472;&#9472; output1.txt . . . <br> &#9500;&#9472;&#9472; outputX.txt <br> &#9492;&#9472;&#9472; settings.json</p>
+
+<p></p>
+
+<p> <b>description.txt :</b> Un fichier texte contenant la description de l&rsquo;exercice. </p><p> <b> inputDescription.txt :</b> Un fichier texte contenant la description des entr&eacute;es standard.</p><p> <b>outputDescription.txt : </b> Un fichier texte contenant la description des sorties standard.</p><p> <b>inputX.txt :</b> Un ou plusieurs fichiers textes contenant une entr&eacute;e, qui peut &ecirc;tre une ou plusieurs lignes.</p>
+
+<p></p>
+
+<p><b>outputX.txt : </b> Un ou plusieurs fichiers textes correspondant &agrave; la sortie attendue pour l&rsquo;entr&eacute;e inputX.txt. settings.json : Un fichier de configuration de l&rsquo;exercice contenant divers param&egrave;tres.</p>
+<br>
+<h4 style="text-align:center;"> Structure du fichier de param&egrave;tres</h4>
+<br>
+<p> Le fichier <b>settings.json</b> se pr&eacute;sente de la mani&egrave;re suivante :</p>
+
+<p style="margin-left:3%;"> { <br> &quot;difficulty&quot;: 0, <br> &quot;language&quot;: [], <br> &quot;timeout&quot;: 10 <br>}</p>
+
+<p></p>
+
+<p> <b>difficulty : </b>Un entier entre 0 et 10, 0 correspondant &agrave; Facile et 10 Tr&egrave;s Difficile </p><p><b>language :</b> Un tableau de cha&icirc;nes de caract&egrave;res parmis les suivantes : python, java, c, c++, c#, nodejs, rust, f#. Si le tableau est vide, tous les langages de programmation sont autoris&eacute;s.</p><p><b> timeout : </b> Un entier, le nombre de secondes maximales pour l'ex&eacute;cution du programme. </p>
+</div>
+<script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>
+{% block javascripts %}
+<script>
+    $('#led,#led2').mouseenter(function() {
+    $('#led,#led2').removeClass("far").addClass("fas").css("cursor", "pointer");
+    }),
+    $('#led,#led2').mouseleave(function() {
+        $('#led,#led2').removeClass("fas").addClass("far");
+    });
+    $('#led').click(function(){
+        $('#show').attr( "style", "display: block");
+        $('#led2').attr( "style", "display: block, white-space:nowrap;");
+        $('#led').attr( "style", "display: none");
+    })
+    $('#led2').click(function(){
+        $('#show').attr( "style", "display: none");
+        $('#led2').attr( "style", "display: none");
+        $('#led').attr( "style", "display: block, white-space:nowrap;");
+    })
+</script> 
+{% endblock %}
 {% endblock %}

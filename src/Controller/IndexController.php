@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Challenge;
+use App\Entity\User;
 use App\Entity\Exercise;
-use App\Repository\ChallengeRepository;
+use App\Entity\Challenge;
 use App\Repository\ExerciseRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\ChallengeRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IndexController extends AbstractController
 {
@@ -16,13 +17,17 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        $repoChall = $this->getDoctrine()->getRepository(Challenge::class);
-        $challenges = $repoChall->findAll();
         $repoExo = $this->getDoctrine()->getRepository(Exercise::class);
         $exercises = $repoExo->findAll();
+        $exercisesAttente = $repoExo->findBy([
+            'state' => 1,
+        ]);
+        $countUsersAttente = count($this->getDoctrine()->getRepository(User::class)->findByRoles("[\"ROLE_NEW_USER\"]"));
+        $countExerciceAttente = count($exercisesAttente);
         return $this->render('index/index.html.twig', [
-            'challenges' => $challenges, 
-            'exercises' => $exercises
+            'exercises' => $exercises,
+            'countUsersAttente' => $countUsersAttente,
+            'countExerciceAttente' => $countExerciceAttente
         ]);
     }
 

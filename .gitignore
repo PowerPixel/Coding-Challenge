@@ -16,3 +16,4 @@ BaseSymfony5.iml
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 exercises/
+*.Identifier

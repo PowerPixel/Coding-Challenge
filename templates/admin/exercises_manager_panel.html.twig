@@ -34,4 +34,5 @@
 {% if not isLastPage %}
 	<a href="{{ path("exercises", {"page" : app.request.get("page")+1 }) }}">></i></a>
 {% endif %}
+
 {% endblock %}

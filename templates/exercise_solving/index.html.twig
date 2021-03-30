@@ -68,13 +68,13 @@
 {% block javascripts %}
 <script>
     $('#led').mouseenter(function() {
-    $('#led').removeClass("far").addClass("fas");
+    $('#led').removeClass("far").addClass("fas").css("cursor", "pointer");;
     }),
     $('#led').mouseleave(function() {
         $('#led').removeClass("fas").addClass("far");
     })
     $('#led2').mouseenter(function() {
-    $('#led2').removeClass("far").addClass("fas");
+    $('#led2').removeClass("far").addClass("fas").css("cursor", "pointer");;
     }),
     $('#led2').mouseleave(function() {
         $('#led2').removeClass("fas").addClass("far");

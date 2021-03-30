@@ -137,12 +137,13 @@ class ExerciseSolvingController extends AbstractController
             if($bestSolve) {
                 if($userScore > $bestSolve->getCompletedTestAmount()) {
                     $user->setTotalScore($user->getTotalScore() + ($ponderateScore - $solvingEntry->getCompletedTestAmount() * $exercise->getDifficulty())); 
+                    $newSolving = $newSolving->setCompletedTestAmount($userScore);
                 }
             } else {
                 $user->setTotalScore($user->getTotalScore() + $ponderateScore);
+                $newSolving = $newSolving->setCompletedTestAmount($userScore);
             }
 
-            $newSolving = $newSolving->setCompletedTestAmount($userScore);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($newSolving);

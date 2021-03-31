@@ -6,6 +6,18 @@
 {% block titre_page %}Accueil
 {% endblock %}
 {% block body %}
+{% if  is_granted('ROLE_ADMIN')%}
+			{% if countExerciceAttente != 0 %}
+				<div class="alert alert-warning">
+					Il y a {{ countExerciceAttente }} exercices en attente, visionnez-les <a href="{{ path("exercises_approval") }}">ici</a>.
+				</div>
+			{% endif %}
+			{% if countUsersAttente != 0 %}
+			<div class="alert alert-warning">
+				Il y a {{ countUsersAttentes }} utilisateurs en attente, visionnez-les <a href="{{ path("users_approval") }}">ici</a>.
+			</div>
+		{% endif %}
+		{% endif %}
 <p>
 {% if app.user %}
 <a href="http://sebastienjean.fr/Enseignement/Oscillo.jpg" target="_blank"><img src="{{ asset('img/martine.jpg') }}" alt="Martine"></a>

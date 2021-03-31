@@ -384,4 +384,26 @@ class AdminController extends AbstractController
             ]
         );
     }
+    /**
+     * Controls the route to delete a user
+     * @Route("/user_deletion/{id}", name="admin_user_deletion")
+     */
+    public function adminUserDeletion(int $id): Response
+    {
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+        if($user != null )
+        {
+            $em = $this->getDoctrine()->getManager();
+            $username = $user->getUsername();
+            $em->remove($user);
+            $em->flush();
+            $this->addFlash('success', "L'utilisateur " . $username . " à été supprimé.");
+        }
+        else
+        {
+            $this->addFlash('error', "L'utilisateur " . $id . " n'existe pas.");
+        }
+        return $this->redirectToRoute("users_managment");
+    }
 }

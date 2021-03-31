@@ -1,39 +1,47 @@
 {% extends "admin/admin_base.html.twig" %}
 {% block titre_page %}
-    Gestion des utilisateurs
+	Gestion des utilisateurs
 {% endblock %}
 {% block content %}
-    <div class="justify-content-md-center w-75">
-		<table class="table">
-			<thead>
-                <th>Username</th>
-				<th>Nom</th>
-				<th>Prénom</th>
-				<th>E-mail</th>
-				<th>Gestion</th>
-			</thead>
-		</tr>
-	</thead>
-	<tbody>
-		{% for user in users %}
-			{% if user.getRoles()[0] != "ROLE_NEW_USER" %}
-				<tr>
-					<td>{{ user.getUsername() }}</td>
-					<td>{{ user.getLastName() }}</td>
-					<td>{{ user.getFirstName() }}</td>
-					<td>{{ user.getEmail() }}</td>
-					<td><a href="#"><i class="fas fa-pen"></i></a>
-					<a href="#"> <i class="fas fa-user-times"></i></a></td>
-				</tr>
-			{% endif %}
-		{% endfor %}
-	</tbody>
-</table>
-{% if app.request.get("page") != 1 %}
-	<a href="{{ path("users_managment", {"page" : app.request.get("page")-1 }) }}"><</a>
-{% endif %}
-{% if not isLastPage %}
-	<a href="{{ path("users_managment", {"page" : app.request.get("page")+1 }) }}">></i></a>
-{% endif %}
-
-{% endblock %}
+    {% for message in app.flashes('error') %}
+		<div class="alert alert-danger">
+			{{ message }}
+		</div>
+	{% endfor %}
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success">
+			{{ message }}
+		</div>
+	{% endfor %}
+<div class="justify-content-md-center w-75">
+	<table class="table">
+		<thead>
+			<th>Username</th>
+			<th>Nom</th>
+			<th>Prénom</th>
+			<th>E-mail</th>
+			<th>Gestion</th>
+		</thead>
+	</tr>
+</thead>
+<tbody>
+	{% for user in users %}
+		{% if user.getRoles()[0] != "ROLE_NEW_USER" %}
+			<tr>
+				<td>{{ user.getUsername() }}</td>
+				<td>{{ user.getLastName() }}</td>
+				<td>{{ user.getFirstName() }}</td>
+				<td>{{ user.getEmail() }}</td>
+				<td>
+					<a href="#">
+						<i class="fas fa-pen"></i>
+					</a>
+					<a href="{{ path("admin_user_deletion", {id:user.id}) }}">
+						<i class="fas fa-user-times"></i>
+					</a>
+				</td>
+			</tr>
+		{% endif %}
+	{% endfor %}
+</tbody></table>{% if app.request.get("page") != 1 %}
+<a href="{{ path("users_managment", {"page" : app.request.get("page")-1 }) }}"><</a><ahref="{{path("users_managment",{"page":app.request.get("page")+1})}}">> {% endif %} {% if not isLastPage %}</i></a>{% endif %}{% endblock %}

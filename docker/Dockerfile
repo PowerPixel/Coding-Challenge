@@ -18,3 +18,4 @@ RUN php composer-setup.php --install-dir /usr/bin --filename composer
 RUN php -r "unlink('composer-setup.php');"
 RUN usermod -d /var/lib/mysql/ mysql
 RUN export HOME='/home/root'
+CMD 

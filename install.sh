@@ -1,5 +1,5 @@
 echo "|---------------------------------------------------------------------------------------------|";
-echo "|Coding Challenge - Dev install script";
+echo "|Coding Challenge - Install script";
 echo "|---------------------------------------------------------------------------------------------|";
 
 function downloadCamisole(){
@@ -7,28 +7,16 @@ function downloadCamisole(){
     wget -O "$1/camisole.ova" https://camisole.prologin.org/ova/camisole-v1.4-2019-01-23.ova -q --show-progress;
 }
 
-function composerSetup(){
-    composer install;
-}
-
-function installDatabase(){
-    php bin/console doctrine:schema:update -f;
-    mysql -D $1 -u $2 -p < SQL_INSERT.sql;
-}
-
-echo "WARNING ! Before using this script, you must have installed VirtualBox, as well as composer.
+echo "WARNING ! Before using this script, you must have installed VirtualBox, as well as docker.
  To do so, please refer to the wiki of the project";
-echo "Please input the path where you'd like to download the camisole image (needs at least 1.5GiB of free space)";
+echo "Please input the path where you'd like to download the camisole image (needs at least 1.5GiB of free space, absolute path)";
 read CAMISOLE_DL_PATH;
 downloadCamisole $CAMISOLE_DL_PATH;
 echo "Installing camisole through VBoxManage...";
 /usr/bin/VBoxManage import "$CAMISOLE_DL_PATH/camisole.ova";
-echo "Installing composer packages..."
-composerSetup;
-echo "Please input your db name";
-read DB_NAME;
-echo "Please input your mysql username";
-read USERNAME_MYSQL_SETUP;
-echo "Installing database...";
-installDatabase $DB_NAME $USERNAME_MYSQL_SETUP;
-echo "Everything done !"
+echo "Installing Docker image"
+docker build --tag coding-challenge ./docker;
+echo "Everything done !";
+printf "You can now launch the camisole VM through the command : \n";
+printf "\tvboxmanage startvm camisole-2019-01-23 --type headless";
+echo "You can launch the docker machine through the script called startDocker.sh, and camisole through the script startCamisole.sh";

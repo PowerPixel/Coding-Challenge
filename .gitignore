@@ -16,3 +16,5 @@ BaseSymfony5.iml
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 exercises/
+camisole.ova
+oracle_vbox_2016.asc

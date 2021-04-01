@@ -13,5 +13,4 @@ printf "\n\texit";
 printf "\n\tphp bin/console doctrine:schema:update -f\n";
 printf "Si vous êtes dans un environnement de développement, insérez également les données de test dans votre base à l'aide de la commande :";
 printf "\n\t mysql -D < SQL_CREATE.sql";
-VBoxManage import ./camisole.ova;
 bash;

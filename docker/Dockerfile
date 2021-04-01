@@ -3,12 +3,6 @@ WORKDIR /usr/src/coding-challenge
 # Fix pour TZData
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN apt-get update --allow-releaseinfo-change
-RUN apt install -y wget
-RUN echo "deb http://download.virtualbox.org/virtualbox/debian buster contrib" > /etc/apt/sources.list.d/virtualbox.list
-RUN wget https://www.virtualbox.org/download/oracle_vbox_2016.asc
-RUN apt-key add oracle_vbox_2016.asc
-RUN rm oracle_vbox_2016.asc
 RUN apt update
 RUN apt install -y php php-xsl git curl wget php-mysql php-curl virtualbox-6.1
 RUN wget https://get.symfony.com/cli/installer -O - | bash

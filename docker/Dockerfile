@@ -1,11 +1,16 @@
 FROM mysql:5.7
 WORKDIR /usr/src/coding-challenge
-RUN mkdir src
 # Fix pour TZData
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update --allow-releaseinfo-change
-RUN apt install -y php php-xsl git curl wget php-mysql php-curl
+RUN apt install -y wget
+RUN echo "deb http://download.virtualbox.org/virtualbox/debian buster contrib" > /etc/apt/sources.list.d/virtualbox.list
+RUN wget https://www.virtualbox.org/download/oracle_vbox_2016.asc
+RUN apt-key add oracle_vbox_2016.asc
+RUN rm oracle_vbox_2016.asc
+RUN apt update
+RUN apt install -y php php-xsl git curl wget php-mysql php-curl virtualbox-6.1
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 RUN mkdir -p /home/root
@@ -18,4 +23,5 @@ RUN php composer-setup.php --install-dir /usr/bin --filename composer
 RUN php -r "unlink('composer-setup.php');"
 RUN usermod -d /var/lib/mysql/ mysql
 RUN export HOME='/home/root'
-CMD 
+COPY startCodingChallengeDocker.sh /usr/bin/startCodingChallengeDocker
+RUN chmod +x /usr/bin/startCodingChallengeDocker

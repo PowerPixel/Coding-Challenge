@@ -16,3 +16,5 @@ BaseSymfony5.iml
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 exercises/
+database/
+camisole.ova

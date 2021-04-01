@@ -1,0 +1,1 @@
+/usr/bin/VBoxManage startvm camisole-2019-01-23 --type headless

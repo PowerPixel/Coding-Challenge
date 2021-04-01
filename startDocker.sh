@@ -1,0 +1,1 @@
+docker run -e MYSQL_ROOT_PASSWORD=root -p 8000:8000 -v "$(pwd)/database":/var/lib/mysql -v "$(pwd)":/usr/src/coding-challenge --rm --net host -it --entrypoint startCodingChallengeDocker coding-challenge

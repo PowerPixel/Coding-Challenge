@@ -11,7 +11,7 @@ echo "WARNING ! Before using this script, you must have installed VirtualBox, as
  To do so, please refer to the wiki of the project";
 echo "Please input the path where you'd like to download the camisole image (needs at least 1.5GiB of free space, absolute path)";
 read CAMISOLE_DL_PATH;
-#downloadCamisole $CAMISOLE_DL_PATH;
+downloadCamisole $CAMISOLE_DL_PATH;
 echo "Installing camisole through VBoxManage...";
 /usr/bin/VBoxManage import "$CAMISOLE_DL_PATH/camisole.ova";
 echo "Installing Docker image"

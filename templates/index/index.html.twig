@@ -19,9 +19,10 @@
 		{% endif %}
 		{% endif %}
 <p>
-{% if app.user %}
+{% if app.user and not is_granted('ROLE_ADMIN') %}
 <a href="http://sebastienjean.fr/Enseignement/Oscillo.jpg" target="_blank"><img src="{{ asset('img/martine.jpg') }}" alt="Martine"></a>
-{% else %}
+{% elseif not app.user %}
+
 Bonjour, et bienvenue sur notre site Coding Challenge. 
 Vous pouvez aller regarder la liste des exercices disponibles afin d'avoir un aperçu de ce, à quoi vous aurez accès une fois inscrit.</p>
 {% endif %}

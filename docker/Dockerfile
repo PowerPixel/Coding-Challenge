@@ -4,7 +4,7 @@ WORKDIR /usr/src/coding-challenge
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt update
-RUN apt install -y php php-xsl git curl wget php-mysql php-curl virtualbox-6.1
+RUN apt install -y php php-xsl git curl wget php-mysql php-curl
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 RUN mkdir -p /home/root
